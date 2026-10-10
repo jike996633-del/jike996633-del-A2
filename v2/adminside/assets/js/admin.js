@@ -193,9 +193,10 @@
             vm.saving = false;
           });
       };
+      // The template puts the form on this controller so ng-if's child scope cannot hide it.
       // Leave warnings only apply to unsaved form edits, not to a successful save.
       const warnBeforeLeave = (event) => {
-        if ($scope.eventForm && $scope.eventForm.$dirty && !vm.saving) {
+        if (vm.form && vm.form.$dirty && !vm.saving) {
           event.preventDefault();
           event.returnValue = "";
         }

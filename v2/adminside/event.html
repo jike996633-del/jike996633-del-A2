@@ -84,8 +84,8 @@
       <div class="editor-layout" ng-if="!editor.loading && !editor.loadError">
         <form
           class="event-editor"
-          name="eventForm"
-          ng-submit="editor.save(eventForm)"
+          name="editor.form"
+          ng-submit="editor.save(editor.form)"
           novalidate
         >
           <fieldset>
@@ -105,7 +105,7 @@
               <p
                 class="field-error"
                 id="name-error"
-                ng-if="(eventForm.$submitted || eventForm.name.$touched) && eventForm.name.$invalid"
+                ng-if="(editor.form.$submitted || editor.form.name.$touched) && editor.form.name.$invalid"
               >
                 Check event name.
               </p>
@@ -127,7 +127,7 @@
               <p
                 class="field-error"
                 id="summary-error"
-                ng-if="(eventForm.$submitted || eventForm.summary.$touched) && eventForm.summary.$invalid"
+                ng-if="(editor.form.$submitted || editor.form.summary.$touched) && editor.form.summary.$invalid"
               >
                 Check short description.
               </p>
@@ -149,7 +149,7 @@
               <p
                 class="field-error"
                 id="description-error"
-                ng-if="(eventForm.$submitted || eventForm.description.$touched) && eventForm.description.$invalid"
+                ng-if="(editor.form.$submitted || editor.form.description.$touched) && editor.form.description.$invalid"
               >
                 Check about the event.
               </p>
@@ -171,7 +171,7 @@
               <p
                 class="field-error"
                 id="purpose-error"
-                ng-if="(eventForm.$submitted || eventForm.purpose.$touched) && eventForm.purpose.$invalid"
+                ng-if="(editor.form.$submitted || editor.form.purpose.$touched) && editor.form.purpose.$invalid"
               >
                 Check purpose.
               </p>
@@ -196,7 +196,7 @@
                 <p
                   class="field-error"
                   id="date-error"
-                  ng-if="(eventForm.$submitted || eventForm.date.$touched) && eventForm.date.$invalid"
+                  ng-if="(editor.form.$submitted || editor.form.date.$touched) && editor.form.date.$invalid"
                 >
                   Check event date.
                 </p>
@@ -217,7 +217,7 @@
                 <p
                   class="field-error"
                   id="startTime-error"
-                  ng-if="(eventForm.$submitted || eventForm.startTime.$touched) && eventForm.startTime.$invalid"
+                  ng-if="(editor.form.$submitted || editor.form.startTime.$touched) && editor.form.startTime.$invalid"
                 >
                   Check start time.
                 </p>
@@ -238,7 +238,7 @@
                 <p
                   class="field-error"
                   id="endTime-error"
-                  ng-if="(eventForm.$submitted || eventForm.endTime.$touched) && eventForm.endTime.$invalid"
+                  ng-if="(editor.form.$submitted || editor.form.endTime.$touched) && editor.form.endTime.$invalid"
                 >
                   Check end time.
                 </p>
@@ -262,7 +262,7 @@
               <p
                 class="field-error"
                 id="locationName-error"
-                ng-if="(eventForm.$submitted || eventForm.locationName.$touched) && eventForm.locationName.$invalid"
+                ng-if="(editor.form.$submitted || editor.form.locationName.$touched) && editor.form.locationName.$invalid"
               >
                 Check location name.
               </p>
@@ -285,7 +285,7 @@
               <p
                 class="field-error"
                 id="suburb-error"
-                ng-if="(eventForm.$submitted || eventForm.suburb.$touched) && eventForm.suburb.$invalid"
+                ng-if="(editor.form.$submitted || editor.form.suburb.$touched) && editor.form.suburb.$invalid"
               >
                 Check suburb.
               </p>
@@ -308,7 +308,7 @@
               <p
                 class="field-error"
                 id="meetingPoint-error"
-                ng-if="(eventForm.$submitted || eventForm.meetingPoint.$touched) && eventForm.meetingPoint.$invalid"
+                ng-if="(editor.form.$submitted || editor.form.meetingPoint.$touched) && editor.form.meetingPoint.$invalid"
               >
                 Check meeting point.
               </p>
@@ -337,7 +337,7 @@
                 <p
                   class="field-error"
                   id="latitude-error"
-                  ng-if="(eventForm.$submitted || eventForm.latitude.$touched) && eventForm.latitude.$invalid"
+                  ng-if="(editor.form.$submitted || editor.form.latitude.$touched) && editor.form.latitude.$invalid"
                 >
                   Check latitude.
                 </p>
@@ -361,7 +361,7 @@
                 <p
                   class="field-error"
                   id="longitude-error"
-                  ng-if="(eventForm.$submitted || eventForm.longitude.$touched) && eventForm.longitude.$invalid"
+                  ng-if="(editor.form.$submitted || editor.form.longitude.$touched) && editor.form.longitude.$invalid"
                 >
                   Check longitude.
                 </p>
@@ -390,7 +390,7 @@
                 <p
                   class="field-error"
                   id="ticketPrice-error"
-                  ng-if="(eventForm.$submitted || eventForm.ticketPrice.$touched) && eventForm.ticketPrice.$invalid"
+                  ng-if="(editor.form.$submitted || editor.form.ticketPrice.$touched) && editor.form.ticketPrice.$invalid"
                 >
                   Check ticket price (aud).
                 </p>
@@ -414,7 +414,7 @@
                 <p
                   class="field-error"
                   id="fundingGoal-error"
-                  ng-if="(eventForm.$submitted || eventForm.fundingGoal.$touched) && eventForm.fundingGoal.$invalid"
+                  ng-if="(editor.form.$submitted || editor.form.fundingGoal.$touched) && editor.form.fundingGoal.$invalid"
                 >
                   Check fundraising goal (aud).
                 </p>
@@ -442,7 +442,7 @@
                 <p
                   class="field-error"
                   id="donationRaised-error"
-                  ng-if="(eventForm.$submitted || eventForm.donationRaised.$touched) && eventForm.donationRaised.$invalid"
+                  ng-if="(editor.form.$submitted || editor.form.donationRaised.$touched) && editor.form.donationRaised.$invalid"
                 >
                   Check donations received (aud).
                 </p>
@@ -467,7 +467,7 @@
               </select>
               <p
                 class="field-error"
-                ng-if="eventForm.$submitted && eventForm.categoryId.$invalid"
+                ng-if="editor.form.$submitted && editor.form.categoryId.$invalid"
               >
                 Choose a category.
               </p>
@@ -485,7 +485,7 @@
               </select>
               <p
                 class="field-error"
-                ng-if="eventForm.$submitted && eventForm.organizationId.$invalid"
+                ng-if="editor.form.$submitted && editor.form.organizationId.$invalid"
               >
                 Choose an organiser.
               </p>
@@ -547,7 +547,7 @@
             >
               {{editor.saving ? 'Saving...' : 'Save event'}}</button
             ><a class="text-link" href="index.html">Back to events</a
-            ><span ng-if="eventForm.$dirty">Unsaved changes</span>
+            ><span ng-if="editor.form.$dirty">Unsaved changes</span>
           </div>
         </form>
         <aside class="staff-bookings-panel">
