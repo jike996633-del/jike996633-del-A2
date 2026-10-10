@@ -73,7 +73,7 @@ INSERT INTO events
 -- A past event stays visible to staff but cannot take public bookings.
 INSERT INTO events
 (event_id,organization_id,category_id,name,summary,description,purpose,location_name,suburb,event_date,start_time,end_time,meeting_point,ticket_price,funding_goal,funding_raised,image_path,status) VALUES
-(10,1,1,'Last month at Bondi','A completed beach clean-up.','Volunteers collected litter along the shoreline. This record is kept for staff.','Keep a record of completed field days.','Bondi Beach','Bondi',DATE_SUB(CURDATE(),INTERVAL 7 DAY),'07:30:00','10:00:00','North Bondi Surf Life Saving Club entrance',0,1000,430,'assets/images/cleanup.jpg','past');
+(10,1,1,'Completed Bondi Beach Clean-up','A completed beach clean-up.','Volunteers collected litter along the shoreline. This record is kept for staff.','Keep a record of completed field days.','Bondi Beach','Bondi',DATE_SUB(CURDATE(),INTERVAL 7 DAY),'07:30:00','10:00:00','North Bondi Surf Life Saving Club entrance',0,1000,430,'assets/images/cleanup.jpg','past');
 
 UPDATE events SET latitude = CASE event_id WHEN 2 THEN -33.9200 WHEN 3 THEN -33.9500 WHEN 4 THEN -33.8720 WHEN 5 THEN -33.8006 WHEN 6 THEN -33.9045 WHEN 7 THEN -33.9786 WHEN 8 THEN -34.0500 ELSE -33.8915 END,
 longitude = CASE event_id WHEN 2 THEN 151.2580 WHEN 3 THEN 151.2550 WHEN 4 THEN 151.1810 WHEN 5 THEN 151.2980 WHEN 6 THEN 151.2680 WHEN 7 THEN 151.2510 WHEN 8 THEN 151.1550 ELSE 151.2767 END;
