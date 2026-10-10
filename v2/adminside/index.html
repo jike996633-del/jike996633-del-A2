@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Events | Driftline staff</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/style.css" />
+    <link rel="stylesheet" href="assets/forms.css" />
+    <link rel="stylesheet" href="assets/admin.css" />
+    <script defer src="assets/vendor/angular.min.js"></script>
+    <script defer src="assets/js/config.js"></script>
+    <script defer src="assets/js/shared.js"></script>
+    <script defer src="assets/js/admin.js"></script>
+  </head>
+  <body ng-app="driftline" ng-cloak data-site="admin">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" ng-controller="NavigationController as nav">
+      <div class="header-inner content-shell">
+        <a class="brand" href="index.html"
+          >driftline<span>.</span><small>Staff</small></a
+        ><button
+          class="menu-toggle"
+          type="button"
+          aria-controls="site-nav"
+          ng-attr-aria-expanded="{{nav.open}}"
+          ng-click="nav.open = !nav.open"
+        >
+          Menu
+        </button>
+        <nav
+          class="site-nav"
+          ng-class="{open: nav.open}"
+          id="site-nav"
+          aria-label="Staff navigation"
+        >
+          <a href="index.html" aria-current="page">Events</a
+          ><a href="event.html">New event</a
+          ><a href="categories.html">Categories</a
+          ><a href="../index.html">Public website ↗</a>
+        </nav>
+      </div>
+    </header>
+    <main
+      id="main"
+      class="staff-main content-shell"
+      ng-controller="StaffEventsController as staff"
+    >
+      <div class="staff-heading">
+        <div>
+          <p class="eyebrow">FIELD DAYS AND BOOKINGS</p>
+          <h1>Events</h1>
+          <p>
+            Manage upcoming days, keep past records and check who has booked.
+          </p>
+        </div>
+        <a class="primary-button" href="event.html"
+          >Add an event <span aria-hidden="true">+</span></a
+        >
+      </div>
+      <div
+        class="form-message success-message"
+        role="status"
+        ng-if="staff.message"
+      >
+        {{staff.message}}
+      </div>
+      <div class="form-message error-message" role="alert" ng-if="staff.error">
+        {{staff.error}}
+        <button class="clear-button" ng-click="staff.load()">Try again</button>
+      </div>
+      <div class="staff-toolbar">
+        <div class="status-filters" aria-label="Filter event status">
+          <button
+            type="button"
+            ng-click="staff.filter.status = ''"
+            ng-class="{selected: !staff.filter.status}"
+            ng-attr-aria-pressed="{{!staff.filter.status}}"
+          >
+            All <span>{{staff.count('')}}</span></button
+          ><button
+            type="button"
+            ng-click="staff.filter.status = 'active'"
+            ng-class="{selected: staff.filter.status === 'active'}"
+            ng-attr-aria-pressed="{{staff.filter.status === 'active'}}"
+          >
+            Active <span>{{staff.count('active')}}</span></button
+          ><button
+            type="button"
+            ng-click="staff.filter.status = 'past'"
+            ng-class="{selected: staff.filter.status === 'past'}"
+            ng-attr-aria-pressed="{{staff.filter.status === 'past'}}"
+          >
+            Past <span>{{staff.count('past')}}</span></button
+          ><button
+            type="button"
+            ng-click="staff.filter.status = 'suspended'"
+            ng-class="{selected: staff.filter.status === 'suspended'}"
+            ng-attr-aria-pressed="{{staff.filter.status === 'suspended'}}"
+          >
+            Suspended <span>{{staff.count('suspended')}}</span>
+          </button>
+        </div>
+        <label class="staff-search"
+          >Find an event<input
+            type="search"
+            placeholder="Name, suburb or activity"
+            ng-model="staff.filter.text"
+        /></label>
+      </div>
+      <p class="status-message" ng-if="staff.loading">Loading events...</p>
+      <div class="staff-table-wrap" ng-if="!staff.loading && !staff.error">
+        <div class="table-scroll">
+          <table class="records-table staff-table">
+            <caption>
+              {{staff.visibleEvents().length}} of {{staff.events.length}}
+              events. An event with bookings must be kept; suspend it to stop
+              new registrations.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Event</th>
+                <th scope="col">Date and time</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="number-cell">Bookings / tickets</th>
+                <th scope="col" class="number-cell">Recorded amount</th>
+                <th scope="col">Manage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="event in staff.visibleEvents() track by event.id">
+                <td class="staff-event-cell">
+                  <img ng-src="{{event.imagePath}}" alt="" />
+                  <div>
+                    <a ng-href="event.html?id={{event.id}}">{{event.name}}</a
+                    ><span>{{event.suburb}} · {{event.category}}</span>
+                  </div>
+                </td>
+                <td>
+                  <strong
+                    >{{view.day(event.date)}} {{view.month(event.date)}}
+                    {{event.date.slice(0,4)}}</strong
+                  ><span class="table-subline"
+                    >{{event.startTime}}–{{event.endTime}}</span
+                  >
+                </td>
+                <td>
+                  <span class="status-tag" ng-class="event.displayStatus"
+                    >{{event.displayStatus}}</span
+                  >
+                </td>
+                <td class="number-cell">
+                  {{event.registrationCount}} / {{event.ticketsBooked}}
+                </td>
+                <td class="number-cell">{{view.money(event.fundingRaised)}}</td>
+                <td>
+                  <div class="row-actions">
+                    <a class="small-button" ng-href="event.html?id={{event.id}}"
+                      >Edit</a
+                    ><button
+                      class="small-button delete-link"
+                      type="button"
+                      ng-click="staff.requestDelete(event)"
+                      aria-label="Delete {{event.name}}"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="empty-state" ng-if="!staff.visibleEvents().length">
+          <h2>No matching events</h2>
+          <p>Change the status filter or search text.</p>
+          <button
+            class="clear-button"
+            type="button"
+            ng-click="staff.filter = {status:'',text:''}"
+          >
+            Clear filters
+          </button>
+        </div>
+      </div>
+      <dialog
+        class="delete-dialog"
+        id="delete-event-dialog"
+        aria-labelledby="delete-title"
+      >
+        <h2 id="delete-title">Delete this event?</h2>
+        <p>
+          <strong>{{staff.selected.name}}</strong> will be removed. An event
+          with registrations cannot be deleted.
+        </p>
+        <div
+          class="form-message error-message"
+          role="alert"
+          ng-if="staff.deleteError"
+        >
+          {{staff.deleteError}}
+        </div>
+        <div class="dialog-actions">
+          <button
+            type="button"
+            class="small-button"
+            ng-click="staff.cancelDelete()"
+            ng-disabled="staff.deleting"
+          >
+            Keep event</button
+          ><button
+            type="button"
+            class="primary-button danger-button"
+            ng-click="staff.deleteEvent()"
+            ng-disabled="staff.deleting"
+          >
+            {{staff.deleting ? 'Deleting...' : 'Delete event'}}
+          </button>
+        </div>
+      </dialog>
+    </main>
+    <footer class="staff-footer content-shell">
+      <span>Driftline · Sydney, NSW</span
+      ><a href="../index.html">Open public website</a>
+    </footer>
+  </body>
+</html>
