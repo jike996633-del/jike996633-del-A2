@@ -15,8 +15,10 @@ app.use(express.json({ limit: '32kb' }));
 app.use('/api', (_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
 
 const asyncRoute = handler => (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
-const publicCondition = "e.status = 'active' AND e.event_date >= CURRENT_DATE()";
-const eventFields = `e.event_id AS id, e.name, e.summary, e.description, e.purpose,
+// Only this date produced by the server is interpolated. Request values use SQL placeholders.
+const sydneyToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Sydney' }).format(new Date());
+const publicCondition = () => `e.status = 'active' AND e.event_date >= '${sydneyToday()}'`;
+const eventFields = () => `e.event_id AS id, e.name, e.summary, e.description, e.purpose,
   e.location_name AS locationName, e.suburb, DATE_FORMAT(e.event_date, '%Y-%m-%d') AS date,
   TIME_FORMAT(e.start_time, '%H:%i') AS startTime, TIME_FORMAT(e.end_time, '%H:%i') AS endTime,
   e.meeting_point AS meetingPoint, e.ticket_price AS ticketPrice, e.funding_goal AS fundingGoal,
@@ -26,7 +28,7 @@ const eventFields = `e.event_id AS id, e.name, e.summary, e.description, e.purpo
   COALESCE((SELECT SUM(r.tickets) FROM registrations r WHERE r.event_id = e.event_id), 0) AS ticketsBooked,
   e.image_path AS imagePath, e.latitude, e.longitude, e.status,
   CASE WHEN e.status = 'suspended' THEN 'suspended'
-    WHEN e.status = 'past' OR e.event_date < CURRENT_DATE() THEN 'past' ELSE 'active' END AS displayStatus,
+    WHEN e.status = 'past' OR e.event_date < '${sydneyToday()}' THEN 'past' ELSE 'active' END AS displayStatus,
   c.category_id AS categoryId, c.name AS category,
   o.organization_id AS organizationId, o.name AS organization, o.summary AS organizationSummary`;
 const eventJoin = `FROM events e JOIN categories c ON c.category_id = e.category_id
@@ -36,8 +38,8 @@ const registrationFields = `registration_id AS id, full_name AS fullName, email,
   DATE_FORMAT(registered_at, '%Y-%m-%dT%H:%i:%s.000Z') AS registeredAt`;
 
 async function detail(eventId, admin = false) {
-  const [rows] = await pool.execute(`SELECT ${eventFields} ${eventJoin}
-    WHERE e.event_id = ? ${admin ? '' : `AND ${publicCondition}`}`, [eventId]);
+  const [rows] = await pool.execute(`SELECT ${eventFields()} ${eventJoin}
+    WHERE e.event_id = ? ${admin ? '' : `AND ${publicCondition()}`}`, [eventId]);
   if (!rows.length) throw new HttpError(404, 'This event is unavailable. Choose another event.');
   // Visitors see purchase records; the staff view also includes contact details.
   const publicFields = `registration_id AS id, full_name AS fullName, tickets, total_amount AS totalAmount,
@@ -75,8 +77,8 @@ app.get('/api/organizations', asyncRoute(async (_req, res) => {
   res.json(rows);
 }));
 app.get('/api/events/featured', asyncRoute(async (_req, res) => {
-  const [rows] = await pool.query(`SELECT ${eventFields} ${eventJoin}
-    WHERE ${publicCondition} ORDER BY e.event_date, e.start_time, e.event_id LIMIT 4`);
+  const [rows] = await pool.query(`SELECT ${eventFields()} ${eventJoin}
+    WHERE ${publicCondition()} ORDER BY e.event_date, e.start_time, e.event_id LIMIT 4`);
   res.json(rows);
 }));
 app.get('/api/events', asyncRoute(async (req, res) => {
@@ -84,7 +86,7 @@ app.get('/api/events', asyncRoute(async (req, res) => {
   if ([date, location, category].some(value => typeof value !== 'string')) throw new HttpError(400, 'Use one value for each filter.');
   if (date && !validate.validDate(date)) throw new HttpError(400, 'Enter a valid date in YYYY-MM-DD format.');
   if (location.length > 80) throw new HttpError(400, 'Location is too long (maximum 80 characters).');
-  const conditions = [publicCondition];
+  const conditions = [publicCondition()];
   const values = [];
   if (date) { conditions.push('e.event_date = ?'); values.push(date); }
   if (location.trim()) {
@@ -93,7 +95,7 @@ app.get('/api/events', asyncRoute(async (req, res) => {
     values.push(term, term);
   }
   if (category) { conditions.push('e.category_id = ?'); values.push(validate.id(category, 'category')); }
-  const [rows] = await pool.execute(`SELECT ${eventFields} ${eventJoin}
+  const [rows] = await pool.execute(`SELECT ${eventFields()} ${eventJoin}
     WHERE ${conditions.join(' AND ')} ORDER BY e.event_date, e.start_time, e.event_id`, values);
   res.json(rows);
 }));
@@ -105,7 +107,7 @@ app.post('/api/events/:id/registrations', asyncRoute(async (req, res) => {
   const result = await transaction(async connection => {
     // Bookings and deletion lock the same event, so they cannot race past the guard.
     const [events] = await connection.execute(`SELECT event_id, ticket_price FROM events
-      WHERE event_id = ? AND status = 'active' AND event_date >= CURRENT_DATE() FOR UPDATE`, [eventId]);
+      WHERE event_id = ? AND status = 'active' AND event_date >= ? FOR UPDATE`, [eventId, sydneyToday()]);
     if (!events.length) throw new HttpError(404, 'This event is no longer accepting registrations.');
     const ticketPrice = Number(events[0].ticket_price);
     const totalAmount = Number((ticketPrice * data.tickets).toFixed(2));
@@ -119,7 +121,7 @@ app.post('/api/events/:id/registrations', asyncRoute(async (req, res) => {
 }));
 
 app.get('/api/admin/events', asyncRoute(async (_req, res) => {
-  const [rows] = await pool.query(`SELECT ${eventFields} ${eventJoin} ORDER BY e.event_date DESC, e.start_time, e.event_id DESC`);
+  const [rows] = await pool.query(`SELECT ${eventFields()} ${eventJoin} ORDER BY e.event_date DESC, e.start_time, e.event_id DESC`);
   res.json(rows);
 }));
 app.get('/api/admin/events/:id', asyncRoute(async (req, res) => res.json(await detail(validate.id(req.params.id), true))));

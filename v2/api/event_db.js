@@ -7,7 +7,7 @@ const pool = mysql.createPool({
   port: Number(process.env.DB_PORT || 3306),
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'charityevents_db',
+  database: process.env.DB_NAME || 'charityevents_a3',
   waitForConnections: true,
   connectionLimit: 5,
   timezone: '+00:00',
@@ -15,5 +15,11 @@ const pool = mysql.createPool({
   decimalNumbers: true
 });
 
-module.exports = pool;
+// mysql2's timezone option formats dates; it does not set the MySQL session clock.
+pool.on('connection', connection => {
+  connection.query("SET time_zone = '+00:00'", error => {
+    if (error) connection.destroy();
+  });
+});
 
+module.exports = pool;

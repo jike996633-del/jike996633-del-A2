@@ -9,13 +9,13 @@ CREATE TABLE organizations (
   summary VARCHAR(500) NOT NULL,
   contact_email VARCHAR(150) NOT NULL,
   city VARCHAR(80) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE categories (
   category_id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(80) NOT NULL UNIQUE,
   slug VARCHAR(80) NOT NULL UNIQUE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE events (
   event_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -44,7 +44,7 @@ CREATE TABLE events (
     REFERENCES categories(category_id),
   INDEX idx_events_date_status (status, event_date),
   INDEX idx_events_suburb (suburb)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO organizations VALUES
 (1, 'Driftline', 'A Sydney community group that organises beach clean-ups, rockpool surveys and planting days.', 'hello@driftline.example', 'Sydney'),
@@ -63,7 +63,7 @@ INSERT INTO events
 (2,1,3,'Rockpool Watch: Coogee','Record species in Coogee rockpools at low tide.','Join a guided rockpool survey at low tide. You will learn how to record common intertidal species and photograph observations without moving animals or disturbing habitat. No science experience is needed. Sturdy shoes with grip are recommended; the route includes uneven rock.','Build a community record of intertidal life and changing conditions.','Coogee Rock Pools','Coogee',DATE_ADD(CURDATE(), INTERVAL 7 DAY),'08:00:00','10:30:00','Steps beside the southern end of Coogee Beach',8.50,2400,1330,'assets/images/rockpool.jpg','active'),
 (3,2,2,'Dune Care at Maroubra','Remove weeds and plant native species behind Maroubra Beach.','Work with local volunteers to weed and plant native coastal species behind the beach. Tools and instructions are supplied. The ground is sandy, and some digging is involved. Bring a hat, water and gardening gloves if you have them.','Restore native dune habitat and reduce erosion along the beach edge.','Maroubra Beach Dunes','Maroubra',DATE_ADD(CURDATE(), INTERVAL 12 DAY),'09:00:00','12:00:00','South Maroubra Surf Life Saving Club',0,3200,980,'assets/images/dune-grass.jpg','active'),
 (4,1,1,'Blackwattle Bay Clean-up','Collect and sort shoreline litter around Blackwattle Bay.','We will collect litter from accessible paths and the shoreline around Blackwattle Bay. A team leader will explain safe collection and sorting before the group sets out. No one will enter the water. Equipment is supplied and beginners are welcome.','Stop urban litter from entering Sydney Harbour.','Blackwattle Bay','Glebe',DATE_ADD(CURDATE(), INTERVAL 18 DAY),'08:30:00','11:00:00','Glebe Foreshore walk, near Jubilee Park',0,1500,510,'assets/images/cliffs.jpg','active'),
-(5,2,4,'Shelly Beach Volunteer Lunch','Meet local volunteers over lunch after a short shoreline walk.','An informal community lunch after a short shoreline walk. Meet neighbours, hear from local volunteers and learn how to join future field days. The event is free; optional donations support gloves, bags and native plants. Bring your own lunch or pick something up nearby.','Bring new coastal volunteers together and fund practical field supplies.','Shelly Beach Reserve','Manly',DATE_ADD(CURDATE(), INTERVAL 26 DAY),'11:00:00','14:00:00','Picnic tables near the Shelly Beach car park',15.00,900,390,'assets/images/shore-texture.jpg','active'),
+(5,2,4,'Shelly Beach Volunteer Lunch','Meet local volunteers over lunch after a short shoreline walk.','An informal community lunch after a short shoreline walk. Meet neighbours, hear from local volunteers and learn how to join future field days. Tickets are $15; proceeds support gloves, bags and native plants. Bring your own lunch or pick something up nearby.','Bring new coastal volunteers together and fund practical field supplies.','Shelly Beach Reserve','Manly',DATE_ADD(CURDATE(), INTERVAL 26 DAY),'11:00:00','14:00:00','Picnic tables near the Shelly Beach car park',15.00,900,390,'assets/images/shore-texture.jpg','active'),
 (6,1,3,'Plastic Count: Bronte','Count and collect small plastics along Bronte Beach.','Help record small pieces of plastic found on the beach using a simple survey method. We will compare samples from different points along the strand line, then remove what we find. The session includes an introduction, field work and a shared count at the end.','Measure and remove small plastics while building a local evidence base.','Bronte Beach','Bronte',DATE_ADD(CURDATE(), INTERVAL 34 DAY),'07:45:00','10:15:00','North end of Bronte Beach, beside the steps',0,1200,730,'assets/images/shore-texture.jpg','active'),
 (7,2,2,'Little Bay Planting Day','Plant native coastal species along the Little Bay coast walk.','Spend the morning planting local coastal species with the field team. They will explain why the plants matter, how to protect the seedlings and how they are cared for afterwards. Tools and seedlings are provided. Wear sturdy shoes and sun protection.','Strengthen native vegetation along an exposed coastal corridor.','Little Bay Coast Walk','Little Bay',DATE_ADD(CURDATE(), INTERVAL 42 DAY),'09:00:00','12:30:00','Little Bay Beach upper entrance',0,2800,1175,'assets/images/dune-grass.jpg','active'),
 (8,1,1,'North Cronulla Beach Clean-up','Remove and record litter on North Cronulla Beach.','Walk the strand line with a volunteer guide, collecting litter before the next high tide. We will sort what we find, record common items and talk about where they may have come from. Bags, gloves and pickers are provided.','Clear marine debris and learn what washes onto the shore.','North Cronulla Beach','Cronulla',DATE_ADD(CURDATE(), INTERVAL 50 DAY),'09:30:00','12:00:00','North Cronulla Surf Life Saving Club',0,2000,1240,'assets/images/hero-coast.jpg','active'),
@@ -93,7 +93,7 @@ CREATE TABLE registrations (
   CONSTRAINT ck_registration_tickets CHECK (tickets BETWEEN 1 AND 20),
   CONSTRAINT ck_registration_price CHECK (ticket_price >= 0 AND total_amount >= 0),
   INDEX idx_registrations_latest (event_id, registered_at, registration_id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Fictional teaching data; no real contact information is included.
 INSERT INTO registrations (event_id,full_name,email,phone,registered_at,tickets,ticket_price,total_amount) VALUES

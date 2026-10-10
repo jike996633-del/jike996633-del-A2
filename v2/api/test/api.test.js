@@ -84,7 +84,7 @@ test('booking uses stored price, server timestamp and exact cents, then changes 
   assert.equal(result.status, 201);
   assert.equal(result.body.totalAmount, 25.50);
   assert.equal(result.body.ticketPrice, 8.50);
-  assert.ok(Date.now() - Date.parse(result.body.registeredAt) < 60000);
+  assert.ok(Math.abs(Date.now() - Date.parse(result.body.registeredAt)) < 60000, 'The timestamp must be within one minute of now, including future drift.');
   const detail = (await request(`events/${event.id}`)).body;
   assert.equal(detail.registrationCount, 1);
   assert.equal(Number(detail.ticketsBooked), 3);
