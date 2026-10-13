@@ -66,7 +66,7 @@ async function transaction(work) {
 
 app.get('/api/health', asyncRoute(async (_req, res) => {
   await pool.query('SELECT 1');
-  res.json({ status: 'ok', version: '2.0.0' });
+  res.json({ status: 'ok', version: require('./package.json').version });
 }));
 app.get('/api/categories', asyncRoute(async (_req, res) => {
   const [rows] = await pool.query('SELECT category_id AS id, name, slug FROM categories ORDER BY category_id');

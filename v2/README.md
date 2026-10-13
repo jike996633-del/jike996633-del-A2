@@ -6,7 +6,7 @@ This is a working reference implementation with recorded local checks. Read [AI-
 
 ## Run locally
 
-Use Node.js 20 or later and MySQL 8.0.16 or later. Keep `api`, `clientside` and `adminside` next to one another.
+Use Node.js 18.20.8 or later and MySQL 8.0.16 or later. Keep `api`, `clientside` and `adminside` next to one another. The SCU account currently provides Node.js 18.20.8; use that version for its managed application.
 
 1. Create a new MySQL database, for example `charityevents_a3`.
 2. Select that database and import `api/schema.sql`. It contains all four tables and sample data, without `CREATE DATABASE`, `USE` or destructive `DROP` statements.

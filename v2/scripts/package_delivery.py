@@ -58,7 +58,8 @@ def main() -> None:
     }
     output = ROOT / "delivery"
     output.mkdir(exist_ok=True)
-    manifest = {"username": args.username, "version": "2.0.0", "archives": []}
+    version = json.loads((ROOT / "api/package.json").read_text(encoding="utf-8"))["version"]
+    manifest = {"username": args.username, "version": version, "archives": []}
     for folder, files in groups.items():
         archive = output / f"{args.username}A3-{folder}.zip"
         entries = []
