@@ -1,6 +1,6 @@
 # Deploy to each student's SCU cPanel
 
-Use the deployment video under the unit's Session Recording section for the exact SCU interface. cPanel's Node features depend on the hosting provider. The `kji10` deployment was performed on 13 October 2026; see [the deployment record](scu-deployment-2026-10-13.md) for live checks and remaining verification limits.
+Use the deployment video under the unit's Session Recording section for the exact SCU interface. cPanel's Node features depend on the hosting provider. Both accounts were deployed on 13 October 2026; see the [kji10 record](scu-deployment-2026-10-13.md) and [syang35 record](scu-syang35-2026-10-13.md) for live checks and remaining verification limits.
 
 Both students must deploy the same project on their own account and complete the checks below. Each student signs in personally; do not share cPanel credentials.
 
@@ -65,22 +65,22 @@ Set `APP_BASE_PATH` to the application's URL prefix, without a trailing slash, o
 
 ## Acceptance on both accounts
 
-Record each student's URL and outcome. The first account below is kji10; the other account has not been verified. Local checks do not establish live results.
+Record each student's URL and outcome. Both accounts below have been verified separately. Local checks do not establish live results.
 
-| Check | kji10 evidence | Other account |
+| Check | kji10 evidence | syang35 evidence |
 | --- | --- | --- |
-| Home reads live API records | Passed | Pending |
-| `/api/health` returns `status: ok` | Passed; version 2.0.1 | Pending |
-| Combined search returns the selected event | Passed; Bondi/date/activity returns 1 event | Pending |
-| Detail shows newest-first registrations | Passed | Pending |
-| New email receives booking confirmation | Passed; fictional booking DL-13 | Pending |
-| Same-event duplicate is rejected | Passed | Pending |
-| Staff creates and edits a disposable event | Existing suspended event saved; creation tested locally | Pending |
-| Registered-event deletion is blocked | Local API test passed; not executed live | Pending |
-| Unregistered event can be deleted | Local API test passed; not executed live | Pending |
-| Staff sees Active, Past and Suspended | Passed; 8/1/1 | Pending |
-| Weather shows forecast or unavailable state | Passed; Bondi forecast shown | Pending |
-| Phone layout and menus work | Prior local verification; not retested live | Pending |
+| Home reads live API records | Passed | Passed |
+| `/api/health` returns `status: ok` | Passed; version 2.0.1 | Passed; version 2.0.1 |
+| Combined search returns the selected event | Passed; Bondi/date/activity returns 1 event | Passed; same combination returns 1 event |
+| Detail shows newest-first registrations | Passed | Passed |
+| New email receives booking confirmation | Passed; fictional booking DL-13 | Passed; separate fictional booking DL-13 |
+| Same-event duplicate is rejected | Passed | Passed |
+| Staff creates and edits a disposable event | Existing suspended event saved; creation tested locally | Existing suspended event saved; creation tested locally |
+| Registered-event deletion is blocked | Local API test passed; not executed live | Same code; not executed live |
+| Unregistered event can be deleted | Local API test passed; not executed live | Same code; not executed live |
+| Staff sees Active, Past and Suspended | Passed; 8/1/1 | Passed; 8/1/1 |
+| Weather shows forecast or unavailable state | Passed; Bondi forecast shown | Passed; Bondi forecast shown |
+| Phone layout and menus work | Prior local verification; not retested live | Prior local verification; not retested live |
 
 Use fictional contacts. Remove only your disposable test records; retain required sample data. The site records amounts and does not take payments.
 

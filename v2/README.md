@@ -6,7 +6,12 @@ This is a working reference implementation with recorded local checks. Read [AI-
 
 ## SCU deployment
 
-Version 2.0.1 is deployed on the `kji10` account. Open the [public website](https://24832245.it.scu.edu.au/driftline-a3/) or [staff website](https://24832245.it.scu.edu.au/driftline-a3/admin/). See the [13 October deployment record](docs/scu-deployment-2026-10-13.md) for the checks performed and their limits. Other team members' accounts have not been deployed or verified here.
+Version 2.0.1 is deployed on both SCU accounts:
+
+- `kji10`: [public website](https://24832245.it.scu.edu.au/driftline-a3/), [staff website](https://24832245.it.scu.edu.au/driftline-a3/admin/), [deployment record](docs/scu-deployment-2026-10-13.md).
+- `syang35`: [public website](https://24833002.it.scu.edu.au/driftline-a3/), [staff website](https://24833002.it.scu.edu.au/driftline-a3/admin/), [deployment record](docs/scu-syang35-2026-10-13.md).
+
+Both accounts passed live health, search, booking, duplicate-booking and existing-event save checks. The deployment records distinguish these results from local tests. The `syang35` deployment uses the optional `--runtime-only` package profile, which includes the application files without project notes, helper scripts or tests.
 
 ## Run locally
 
