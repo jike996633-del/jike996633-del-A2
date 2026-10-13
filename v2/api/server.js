@@ -201,17 +201,20 @@ app.use((error, req, res, _next) => {
   res.status(503).json({ error: 'The event service is unavailable. Please try again shortly.' });
 });
 
-if (require.main === module) {
+function start() {
   const port = Number(process.env.PORT || 3027);
-  pool.query('SELECT 1').then(() => {
+  return pool.query('SELECT 1').then(() => {
     const server = app.listen(port, '0.0.0.0', () => console.log(`Driftline v2: http://localhost:${port}`));
     const stop = () => server.close(() => pool.end().then(() => process.exit(0)));
     process.once('SIGTERM', stop);
     process.once('SIGINT', stop);
+    return server;
   }).catch(error => {
     console.error('Could not connect to MySQL:', error.code || error.message);
     process.exitCode = 1;
     pool.end();
   });
 }
+if (require.main === module) start();
 module.exports = app;
+module.exports.start = start;

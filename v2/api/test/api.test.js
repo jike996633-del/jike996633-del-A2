@@ -1,5 +1,8 @@
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
+const path = require('node:path');
+const { spawn } = require('node:child_process');
+const net = require('node:net');
 
 // Refuse to run against an ordinary database: these tests create and remove their own rows.
 const testDatabase = process.env.TEST_DB_NAME;
@@ -163,4 +166,40 @@ test('unknown endpoints, malformed JSON and excessive bodies produce clear HTTP 
   assert.equal(malformed.status, 400);
   const tooLarge = await request('admin/events', 'POST', { name: 'x'.repeat(40000) });
   assert.equal(tooLarge.status, 413);
+});
+
+test('Passenger can import its entry and serve the database health endpoint', async () => {
+  const probe = net.createServer();
+  await new Promise(resolve => probe.listen(0, '127.0.0.1', resolve));
+  const port = probe.address().port;
+  await new Promise(resolve => probe.close(resolve));
+  const child = spawn(process.execPath, ['-e', 'require("./passenger")'], {
+    cwd: path.resolve(__dirname, '..'),
+    env: { ...process.env, PORT: String(port) },
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+  let errors = '';
+  let timer;
+  child.stderr.on('data', data => { errors += data; });
+  try {
+    await new Promise((resolve, reject) => {
+      timer = setTimeout(() => reject(new Error('Passenger entry did not start: ' + errors)), 8000);
+      child.stdout.on('data', data => {
+        if (String(data).includes('Driftline v2:')) resolve();
+      });
+      child.once('error', reject);
+      child.once('exit', code => reject(new Error(`Passenger entry exited (${code}): ${errors}`)));
+    });
+    clearTimeout(timer);
+    const response = await fetch(`http://127.0.0.1:${port}/api/health`);
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { status: 'ok', version: require('../package.json').version });
+  } finally {
+    clearTimeout(timer);
+    if (child.exitCode === null && child.signalCode === null) {
+      const stopped = new Promise(resolve => child.once('exit', resolve));
+      child.kill('SIGTERM');
+      await stopped;
+    }
+  }
 });

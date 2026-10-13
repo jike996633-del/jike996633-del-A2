@@ -12,7 +12,7 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
 API_FILES = (".env.example", "event_db.js", "package.json", "package-lock.json",
-             "schema.sql", "server.js", "validation.js", "test/api.test.js")
+             "schema.sql", "server.js", "passenger.js", "validation.js", "test/api.test.js")
 DOC_FILES = ("architecture.md", "deployment.md", "rubric-checklist.md",
              "local-verification.md", "video-checklist.md", "AI-use.md")
 SCRIPT_FILES = ("package_delivery.py", "preview.ps1")

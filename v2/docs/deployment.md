@@ -21,13 +21,14 @@ Extract all three ZIP files with `api`, `clientside` and `adminside` as siblings
 ```text
 /home/ACCOUNT/driftline-a3/
   api/server.js
+  api/passenger.js
   api/package.json
   api/schema.sql
   clientside/index.html
   adminside/index.html
 ```
 
-In the Node application tool shown by the course video, choose an available Node version of at least 18.20.8, use the `api` folder as application root and `server.js` as startup file. The SCU account inspected on 13 October 2026 provides Node.js 18.20.8. Choose the public application URL and production environment. Install dependencies with the panel's action, or activate its Node environment and run `npm ci --omit=dev` in `api`.
+In the Node application tool shown by the course video, choose an available Node version of at least 18.20.8, use the `api` folder as application root and `passenger.js` as startup file. Passenger imports this entry as a module, so it explicitly starts the service; `server.js` remains the local CLI entry. The SCU account inspected on 13 October 2026 provides Node.js 18.20.8. Choose the public application URL and production environment. Install dependencies with the panel's action, or activate its Node environment and run `npm ci --omit=dev` in `api`.
 
 Set these variables in the panel, or in an `api/.env` file outside the publicly served folders:
 
