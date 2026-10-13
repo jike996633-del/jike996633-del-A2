@@ -6,7 +6,7 @@ This is a working reference implementation with recorded local checks. Read [AI-
 
 ## Run locally
 
-Use Node.js 18.20.8 or later and MySQL 8.0.16 or later. Keep `api`, `clientside` and `adminside` next to one another. The SCU account currently provides Node.js 18.20.8; use that version for its managed application.
+Use Node.js 18.20.8 or later and MySQL 5.7.44 or later. Keep `api`, `clientside` and `adminside` next to one another. The SCU account currently provides Node.js 18.20.8 and MySQL 5.7.44; use that Node version for its managed application. The API validates ticket counts and amounts on both database versions; MySQL 8.0.16 or later also enforces their CHECK constraints.
 
 1. Create a new MySQL database, for example `charityevents_a3`.
 2. Select that database and import `api/schema.sql`. It contains all four tables and sample data, without `CREATE DATABASE`, `USE` or destructive `DROP` statements.

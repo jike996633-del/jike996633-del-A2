@@ -12,6 +12,8 @@ Both students must deploy the same project on their own account and complete the
 
 Use a fresh database. The SQL does not create/select a database, migrate existing tables or act as a backup procedure.
 
+The SCU account inspected on 13 October 2026 runs MySQL 5.7.44. The single SQL file supports this version and MySQL 8 by enabling named CHECK constraints only on MySQL 8.0.16 or later. API validation, foreign keys and the unique event/email key remain in effect on MySQL 5.7.
+
 ## Node application
 
 Extract all three ZIP files with `api`, `clientside` and `adminside` as siblings. Preserve names and case. For example:

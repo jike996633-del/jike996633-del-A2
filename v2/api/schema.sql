@@ -90,8 +90,10 @@ CREATE TABLE registrations (
   total_amount DECIMAL(10,2) NOT NULL,
   CONSTRAINT fk_registrations_event FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE RESTRICT,
   CONSTRAINT uq_registration_event_email UNIQUE (event_id, email),
-  CONSTRAINT ck_registration_tickets CHECK (tickets BETWEEN 1 AND 20),
-  CONSTRAINT ck_registration_price CHECK (ticket_price >= 0 AND total_amount >= 0),
+  -- MySQL 5.7 does not support named CHECK constraints; the API validates these fields.
+  -- MySQL 8.0.16+ also enforces them in the database.
+  /*!80016 CONSTRAINT ck_registration_tickets CHECK (tickets BETWEEN 1 AND 20), */
+  /*!80016 CONSTRAINT ck_registration_price CHECK (ticket_price >= 0 AND total_amount >= 0), */
   INDEX idx_registrations_latest (event_id, registered_at, registration_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
