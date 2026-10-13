@@ -175,7 +175,7 @@ test('Passenger can import its entry and serve the database health endpoint', as
   await new Promise(resolve => probe.close(resolve));
   const child = spawn(process.execPath, ['-e', 'require("./passenger")'], {
     cwd: path.resolve(__dirname, '..'),
-    env: { ...process.env, PORT: String(port) },
+    env: { ...process.env, PORT: String(port), APP_BASE_PATH: '/hosted-demo' },
     stdio: ['ignore', 'pipe', 'pipe']
   });
   let errors = '';
@@ -191,9 +191,15 @@ test('Passenger can import its entry and serve the database health endpoint', as
       child.once('exit', code => reject(new Error(`Passenger entry exited (${code}): ${errors}`)));
     });
     clearTimeout(timer);
-    const response = await fetch(`http://127.0.0.1:${port}/api/health`);
+    const address = `http://127.0.0.1:${port}`;
+    const response = await fetch(address + '/hosted-demo/api/health');
     assert.equal(response.status, 200);
     assert.deepEqual(await response.json(), { status: 'ok', version: require('../package.json').version });
+    assert.equal((await fetch(address + '/api/health')).status, 200);
+    assert.equal((await fetch(address + '/hosted-demo-other/api/health')).status, 404);
+    const redirect = await fetch(address + '/hosted-demo', { redirect: 'manual' });
+    assert.equal(redirect.status, 308);
+    assert.equal(redirect.headers.get('location'), '/hosted-demo/');
   } finally {
     clearTimeout(timer);
     if (child.exitCode === null && child.signalCode === null) {

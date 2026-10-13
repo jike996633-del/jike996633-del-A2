@@ -6,6 +6,18 @@ const validate = require('./validation');
 const { HttpError } = validate;
 
 const app = express();
+const deploymentPath = (process.env.APP_BASE_PATH || '').replace(/\/+$/, '');
+if (deploymentPath) {
+  // Some Passenger installations retain the public URL prefix in the forwarded request.
+  app.use((req, res, next) => {
+    if (req.url === deploymentPath) return res.redirect(308, deploymentPath + '/');
+    if (req.url.startsWith(deploymentPath + '/') || req.url.startsWith(deploymentPath + '?')) {
+      req.url = req.url.slice(deploymentPath.length);
+      if (req.url.startsWith('?')) req.url = '/' + req.url;
+    }
+    next();
+  });
+}
 app.disable('x-powered-by');
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
 app.use(cors({ origin(origin, callback) {

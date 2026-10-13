@@ -39,6 +39,7 @@ DB_USER=ACCOUNT_databaseuser
 DB_PASSWORD=the_database_password
 DB_NAME=ACCOUNT_databasename
 NODE_ENV=production
+APP_BASE_PATH=/driftline-a3
 ALLOWED_ORIGINS=
 ```
 
@@ -60,7 +61,7 @@ window.DRIFTLINE_CONFIG = {
 
 Use the real address/path. For different HTML and API origins, set `ALLOWED_ORIGINS` to the exact HTML origins, separated by commas. An origin is the scheme, host and optional port, without a path. Restart Node. Keep the public/staff folders at the documented relative locations or adjust their cross-site navigation to the actual layout.
 
-If the provider forwards a URL prefix differently, check the course instructions and a real `/api/health` request before changing routes. SCU prefix behaviour has not been verified here.
+Set `APP_BASE_PATH` to the application's URL prefix, without a trailing slash, or leave it empty for an application at the domain root. The SCU account inspected on 13 October 2026 retains `/driftline-a3` when forwarding requests. The API accepts both retained and already-stripped prefixes. Verify the public `/driftline-a3/api/health` address after restarting.
 
 ## Acceptance on both accounts
 
