@@ -45,22 +45,28 @@ def verify_shared_assets() -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--username", default="username", help="SCU username used in archive names")
+    parser.add_argument("--runtime-only", action="store_true",
+                        help="Include application files only, without project notes or helper scripts")
     args = parser.parse_args()
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}", args.username):
         parser.error("Use letters, numbers, dots, underscores or hyphens for the username.")
     verify_shared_assets()
+    api_files = [ROOT / "api" / name for name in API_FILES
+                 if not (args.runtime_only and name.startswith("test/"))]
+    if not args.runtime_only:
+        api_files += ([ROOT / "docs" / name for name in DOC_FILES]
+                      + [ROOT / "scripts" / name for name in SCRIPT_FILES]
+                      + [ROOT / "README.md", ROOT / "HANDOFF.md"])
     groups = {
         "clientside": site_files("clientside"),
         "adminside": site_files("adminside"),
-        "api": [ROOT / "api" / name for name in API_FILES]
-               + [ROOT / "docs" / name for name in DOC_FILES]
-               + [ROOT / "scripts" / name for name in SCRIPT_FILES]
-               + [ROOT / "README.md", ROOT / "HANDOFF.md"],
+        "api": api_files,
     }
     output = ROOT / "delivery"
     output.mkdir(exist_ok=True)
     version = json.loads((ROOT / "api/package.json").read_text(encoding="utf-8"))["version"]
-    manifest = {"username": args.username, "version": version, "archives": []}
+    manifest = {"username": args.username, "version": version,
+                "profile": "runtime" if args.runtime_only else "source", "archives": []}
     for folder, files in groups.items():
         archive = output / f"{args.username}A3-{folder}.zip"
         entries = []
@@ -79,7 +85,8 @@ def main() -> None:
         print(f"{archive.name}: {len(entries)} files, {archive.stat().st_size:,} bytes")
     copyfile(ROOT / "api/schema.sql", output / "schema.sql")
     manifest["sql"] = {"file": "schema.sql", "sha256": digest(output / "schema.sql")}
-    (output / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    manifest_path = output / (f"{args.username}A3-manifest.json" if args.runtime_only else "manifest.json")
+    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print("SQL and SHA-256 manifest written. No .env, node_modules, .git or local database included.")
 
 
