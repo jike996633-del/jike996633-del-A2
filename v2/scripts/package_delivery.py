@@ -14,7 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 API_FILES = (".env.example", "event_db.js", "package.json", "package-lock.json",
              "schema.sql", "server.js", "passenger.js", "validation.js", "test/api.test.js")
 DOC_FILES = ("architecture.md", "deployment.md", "rubric-checklist.md",
-             "local-verification.md", "video-checklist.md", "AI-use.md")
+             "local-verification.md", "video-checklist.md", "AI-use.md",
+             "scu-deployment-2026-10-13.md")
 SCRIPT_FILES = ("package_delivery.py", "preview.ps1")
 SHARED_FILES = ("style.css", "forms.css", "js/config.js", "js/shared.js",
                 "vendor/angular.min.js", "vendor/ANGULAR-LICENSE.txt")

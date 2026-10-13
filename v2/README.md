@@ -4,6 +4,10 @@ Driftline lists community events along Sydney's coast. This version extends A2 w
 
 This is a working reference implementation with recorded local checks. Read [AI-use.md](docs/AI-use.md) before using it for assessed work: the supplied brief does not permit copying generated code or a generated report into a submission.
 
+## SCU deployment
+
+Version 2.0.1 is deployed on the `kji10` account. Open the [public website](https://24832245.it.scu.edu.au/driftline-a3/) or [staff website](https://24832245.it.scu.edu.au/driftline-a3/admin/). See the [13 October deployment record](docs/scu-deployment-2026-10-13.md) for the checks performed and their limits. Other team members' accounts have not been deployed or verified here.
+
 ## Run locally
 
 Use Node.js 18.20.8 or later and MySQL 5.7.44 or later. Keep `api`, `clientside` and `adminside` next to one another. The SCU account currently provides Node.js 18.20.8 and MySQL 5.7.44; use that Node version for its managed application. The API validates ticket counts and amounts on both database versions; MySQL 8.0.16 or later also enforces their CHECK constraints.
