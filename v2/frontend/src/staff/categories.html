@@ -137,6 +137,7 @@
     </form>
   </div>
   <dialog class="delete-dialog" id="delete-category-dialog" aria-labelledby="delete-category-title">
+    @if (vm.selected) {
     <h2 id="delete-category-title">Delete this category?</h2>
     <p><strong>{{vm.selected.name}}</strong> will be removed if no events use it.</p>
     @if (vm.deleteError) {
@@ -159,6 +160,7 @@
         {{vm.deleting ? 'Deleting...' : 'Delete category'}}
       </button>
     </div>
+    }
   </dialog>
 </main>
 <footer class="staff-footer content-shell">

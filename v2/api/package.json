@@ -1,6 +1,6 @@
 {
   "name": "driftline-events-api",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "description": "Driftline event registration and administration API",
   "main": "server.js",

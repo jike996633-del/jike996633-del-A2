@@ -151,6 +151,7 @@
   </div>
   }
   <dialog class="delete-dialog" id="delete-event-dialog" aria-labelledby="delete-title">
+    @if (vm.selected) {
     <h2 id="delete-title">Delete this event?</h2>
     <p>
       <strong>{{vm.selected.name}}</strong> will be removed. An event with registrations cannot be
@@ -176,6 +177,7 @@
         {{vm.deleting ? 'Deleting...' : 'Delete event'}}
       </button>
     </div>
+    }
   </dialog>
 </main>
 <footer class="staff-footer content-shell">

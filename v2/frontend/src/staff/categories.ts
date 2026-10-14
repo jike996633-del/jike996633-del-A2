@@ -33,7 +33,7 @@ export class CategoriesComponent {
   fields: Record<string, string> = {};
   data: Partial<Category> = { name: '', slug: '' };
   categories: Category[] = [];
-  selected!: Category;
+  selected: Category | null = null;
   deleteError = '';
   deleting = false;
   load!: () => void;
@@ -114,12 +114,14 @@ export class CategoriesComponent {
       document.querySelector<HTMLDialogElement>('#delete-category-dialog')!.close();
     };
     vm.remove = function () {
+      if (vm.deleting || !vm.selected) return;
+      const selected = vm.selected;
       vm.deleting = true;
       api
-        .remove('api/admin/categories/' + vm.selected.id)
+        .remove('api/admin/categories/' + selected.id)
         .then(
           () => {
-            vm.message = 'Deleted ' + vm.selected.name + '.';
+            vm.message = 'Deleted ' + selected.name + '.';
             vm.cancelDelete();
             vm.load();
           },

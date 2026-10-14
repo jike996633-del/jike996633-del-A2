@@ -1,6 +1,6 @@
 # Driftline — PROG2002 A3 reference project
 
-Current release: **3.0.0**, with **Angular 22.2.2 + TypeScript 6.0.3** on both websites. See [the build and verification runbook](docs/angular22-build-runbook.md) for current source, commands and assessment evidence.
+Current release: **3.0.1**, with **Angular 22.2.2 + TypeScript 6.0.3** on both websites. See [the build and verification runbook](docs/angular22-build-runbook.md) for current source, commands and assessment evidence.
 
 Driftline lists community events along Sydney's coast. This version extends A2 with bookings, a staff website and MySQL-backed editing. It uses Node.js, Express, MySQL and Angular 22.2.2 and TypeScript 6.0.3 on both websites. Event pages show an Open-Meteo forecast when the event falls within the forecast window.
 

@@ -10,7 +10,10 @@ for (const [app, folder] of [
   const target = path.join(root, folder);
   await mkdir(target, { recursive: true });
   const generated = await readdir(build);
-  const licenses = await readFile(path.join(root, 'frontend/dist', app, '3rdpartylicenses.txt'), 'utf8');
+  const licenses = await readFile(
+    path.join(root, 'frontend/dist', app, '3rdpartylicenses.txt'),
+    'utf8',
+  );
   await writeFile(path.join(target, '3rdpartylicenses.txt'), licenses.replace(/[ \t]+$/gm, ''));
   for (const file of await readdir(target)) {
     if (/^(main|polyfills|chunk)-[A-Z0-9]+\.js$/.test(file) && !generated.includes(file))
@@ -29,7 +32,7 @@ for (const [app, folder] of [
   const manifest = generated.filter((file) => file !== 'index.html');
   await writeFile(
     path.join(target, 'build-manifest.json'),
-    JSON.stringify({ version: '3.0.0', angular: '22.2.2', files: manifest }, null, 2) + '\n',
+    JSON.stringify({ version: '3.0.1', angular: '22.2.2', files: manifest }, null, 2) + '\n',
   );
   console.log(app + ': Angular 22.2.2 production files published.');
 }

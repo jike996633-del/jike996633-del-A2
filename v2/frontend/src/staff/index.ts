@@ -33,7 +33,7 @@ export class StaffEventsComponent {
   fields: Record<string, string> = {};
   events: Event[] = [];
   filter = { status: '', text: '' };
-  selected!: Event;
+  selected: Event | null = null;
   deleteError = '';
   deleting = false;
   load!: () => void;
@@ -85,13 +85,14 @@ export class StaffEventsComponent {
       document.querySelector<HTMLDialogElement>('#delete-event-dialog')!.close();
     };
     vm.deleteEvent = function () {
-      if (vm.deleting) return;
+      if (vm.deleting || !vm.selected) return;
+      const selected = vm.selected;
       vm.deleting = true;
       api
-        .remove('api/admin/events/' + vm.selected.id)
+        .remove('api/admin/events/' + selected.id)
         .then(
           () => {
-            vm.message = 'Deleted ' + vm.selected.name + '.';
+            vm.message = 'Deleted ' + selected.name + '.';
             vm.cancelDelete();
             vm.load();
           },
