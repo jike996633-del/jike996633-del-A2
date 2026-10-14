@@ -1,5 +1,7 @@
 # Local verification — 10 October 2026
 
+Historical verification of the earlier AngularJS release. For the current Angular 22.2.2/TypeScript release, use [the build runbook](angular22-build-runbook.md) and [14 October deployment record](SCU-angular22-2026-10-14.md). These original checks are preserved; they are not presented as fresh checks of the current build.
+
 These checks were performed on `v2` in Windows. They establish local behaviour, not SCU hosting or student authorship.
 
 ## Environment

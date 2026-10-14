@@ -15,7 +15,8 @@ API_FILES = (".env.example", "event_db.js", "package.json", "package-lock.json",
              "schema.sql", "server.js", "passenger.js", "validation.js", "test/api.test.js")
 DOC_FILES = ("architecture.md", "deployment.md", "rubric-checklist.md",
              "local-verification.md", "video-checklist.md", "AI-use.md",
-             "scu-deployment-2026-10-13.md", "scu-syang35-2026-10-13.md", "angular22-build-runbook.md")
+             "scu-deployment-2026-10-13.md", "scu-syang35-2026-10-13.md", "angular22-build-runbook.md",
+             "SCU-angular22-2026-10-14.md")
 SCRIPT_FILES = ("package_delivery.py", "preview.ps1")
 SHARED_FILES = ("style.css", "forms.css")
 
@@ -56,6 +57,7 @@ def main() -> None:
         api_files += ([ROOT / "docs" / name for name in DOC_FILES]
                       + [ROOT / "scripts" / name for name in SCRIPT_FILES]
                       + [ROOT / "README.md", ROOT / "HANDOFF.md"])
+        api_files += sorted((ROOT / "docs" / "angular22-verification").glob("*.jpg"))
     groups = {
         "clientside": site_files("clientside"),
         "adminside": site_files("adminside"),
