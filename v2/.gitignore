@@ -7,3 +7,7 @@ PROG2002 A2 Assessment Brief.pdf
 .qa/
 runtime/
 delivery/
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+.local/

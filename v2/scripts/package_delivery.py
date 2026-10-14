@@ -15,10 +15,9 @@ API_FILES = (".env.example", "event_db.js", "package.json", "package-lock.json",
              "schema.sql", "server.js", "passenger.js", "validation.js", "test/api.test.js")
 DOC_FILES = ("architecture.md", "deployment.md", "rubric-checklist.md",
              "local-verification.md", "video-checklist.md", "AI-use.md",
-             "scu-deployment-2026-10-13.md", "scu-syang35-2026-10-13.md")
+             "scu-deployment-2026-10-13.md", "scu-syang35-2026-10-13.md", "angular22-build-runbook.md")
 SCRIPT_FILES = ("package_delivery.py", "preview.ps1")
-SHARED_FILES = ("style.css", "forms.css", "js/config.js", "js/shared.js",
-                "vendor/angular.min.js", "vendor/ANGULAR-LICENSE.txt")
+SHARED_FILES = ("style.css", "forms.css")
 
 
 def digest(path: Path) -> str:
@@ -28,7 +27,7 @@ def digest(path: Path) -> str:
 def site_files(folder: str) -> list[Path]:
     files = sorted(path for path in (ROOT / folder).rglob("*") if path.is_file())
     for path in files:
-        if path.is_symlink() or path.suffix.lower() not in {".html", ".css", ".js", ".jpg", ".txt"}:
+        if path.is_symlink() or path.suffix.lower() not in {".html", ".css", ".js", ".jpg", ".txt", ".json", ".woff2", ".ttf", ".svg", ".ico"}:
             raise ValueError(f"Unexpected site file: {path.relative_to(ROOT)}")
     return files
 
@@ -62,6 +61,16 @@ def main() -> None:
         "adminside": site_files("adminside"),
         "api": api_files,
     }
+    if not args.runtime_only:
+        # Include the reproducible TypeScript workspace, not only compiled scripts.
+        frontend = [p for p in (ROOT / 'frontend').rglob('*') if p.is_file()
+                    and not set(p.relative_to(ROOT / 'frontend').parts).intersection({'node_modules', 'dist', '.angular', 'out-tsc'})
+                    and p.suffix in {'.ts', '.html', '.json', '.mjs'}]
+        for p in frontend:
+            if p.is_symlink():
+                raise ValueError('A frontend source path is linked.')
+        groups['clientside'] += frontend
+        groups['adminside'] += frontend
     output = ROOT / "delivery"
     output.mkdir(exist_ok=True)
     version = json.loads((ROOT / "api/package.json").read_text(encoding="utf-8"))["version"]

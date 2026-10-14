@@ -1,0 +1,166 @@
+<a class="skip-link" localAnchor="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner content-shell">
+    <a class="brand" href="index.html">driftline<span>.</span><small>Staff</small></a
+    ><button
+      class="menu-toggle"
+      type="button"
+      aria-controls="site-nav"
+      (click)="nav.open = !nav.open"
+      [attr.aria-expanded]="nav.open"
+    >
+      Menu
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Staff navigation" [ngClass]="{open: nav.open}">
+      <a href="index.html">Events</a><a href="event.html">New event</a
+      ><a href="vm.html" aria-current="page">Categories</a
+      ><a href="../index.html">Public website ↗</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="staff-main content-shell">
+  <div class="staff-heading">
+    <div>
+      <p class="eyebrow">ACTIVITY TYPES</p>
+      <h1>Categories</h1>
+      <p>Keep the names used in event listings and search filters consistent.</p>
+    </div>
+  </div>
+  @if (vm.message) {
+  <div class="form-message success-message" role="status">{{vm.message}}</div>
+  }
+  <div class="category-layout">
+    <section class="staff-table-wrap">
+      @if (vm.loading) {
+      <p class="status-message">Loading vm...</p>
+      }
+      <div class="table-scroll">
+        <table class="records-table">
+          <caption>
+            Categories used by events cannot be deleted.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Slug</th>
+              <th scope="col">Manage</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (category of (vm.categories); track category.id) {
+            <tr>
+              <td>{{category.name}}</td>
+              <td class="slug-cell">{{category.slug}}</td>
+              <td>
+                <div class="row-actions">
+                  <button
+                    class="small-button"
+                    type="button"
+                    aria-label="Edit {{category.name}}"
+                    (click)="vm.edit(category)"
+                  >
+                    Edit</button
+                  ><button
+                    class="small-button delete-link"
+                    type="button"
+                    aria-label="Delete {{category.name}}"
+                    (click)="vm.requestDelete(category)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <form
+      class="category-form"
+      name="categoryForm"
+      novalidate
+      #categoryForm="ngForm"
+      (ngSubmit)="vm.save(categoryForm)"
+    >
+      <h2>{{vm.data.id ? 'Edit category' : 'Add a category'}}</h2>
+      <div class="field">
+        <label for="category-name">Name</label
+        ><input
+          id="category-name"
+          name="name"
+          type="text"
+          required
+          maxlength="80"
+          [(ngModel)]="vm.data.name"
+          minlength="2"
+        />
+        @if ((categoryForm.submitted || categoryForm.controls['name']?.touched) &&
+        categoryForm.controls['name']?.invalid) {
+        <p class="field-error">Enter a name (2–80 characters).</p>
+        } @if (vm.fields.name) {
+        <p class="field-error">{{vm.fields.name}}</p>
+        }
+      </div>
+      <div class="field">
+        <label for="category-slug">Slug</label
+        ><input
+          id="category-slug"
+          name="slug"
+          type="text"
+          required
+          maxlength="80"
+          aria-describedby="slug-help"
+          [(ngModel)]="vm.data.slug"
+          pattern="^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        />
+        <p class="field-help" id="slug-help">
+          Lowercase words with hyphens, such as beach-cleanup.
+        </p>
+        @if ((categoryForm.submitted || categoryForm.controls['slug']?.touched) &&
+        categoryForm.controls['slug']?.invalid) {
+        <p class="field-error">Use lowercase words separated by hyphens.</p>
+        } @if (vm.fields.slug) {
+        <p class="field-error">{{vm.fields.slug}}</p>
+        }
+      </div>
+      @if (vm.error) {
+      <div class="form-message error-message" role="alert">{{vm.error}}</div>
+      }
+      <div class="category-actions">
+        <button class="primary-button" type="submit" [disabled]="vm.saving">
+          {{vm.saving ? 'Saving...' : 'Save category'}}</button
+        ><button class="clear-button" type="button" (click)="vm.reset(categoryForm)">
+          Clear form
+        </button>
+      </div>
+    </form>
+  </div>
+  <dialog class="delete-dialog" id="delete-category-dialog" aria-labelledby="delete-category-title">
+    <h2 id="delete-category-title">Delete this category?</h2>
+    <p><strong>{{vm.selected.name}}</strong> will be removed if no events use it.</p>
+    @if (vm.deleteError) {
+    <div class="form-message error-message" role="alert">{{vm.deleteError}}</div>
+    }
+    <div class="dialog-actions">
+      <button
+        class="small-button"
+        type="button"
+        (click)="vm.cancelDelete()"
+        [disabled]="vm.deleting"
+      >
+        Keep category</button
+      ><button
+        class="primary-button danger-button"
+        type="button"
+        (click)="vm.remove()"
+        [disabled]="vm.deleting"
+      >
+        {{vm.deleting ? 'Deleting...' : 'Delete category'}}
+      </button>
+    </div>
+  </dialog>
+</main>
+<footer class="staff-footer content-shell">
+  <span>Driftline · Sydney, NSW</span><a href="../index.html">Open public website</a>
+</footer>

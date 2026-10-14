@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const pool = require('./event_db');
 const validate = require('./validation');
 const { HttpError } = validate;
@@ -194,6 +195,23 @@ app.delete('/api/admin/categories/:id', asyncRoute(async (req, res) => {
 }));
 
 app.use('/api', (_req, res) => res.status(404).json({ error: 'API route not found.' }));
+// Each Angular application has its own router base. Resolve the deployed
+// prefix here so the same production build runs locally and on Passenger.
+for (const [folder, names] of [['clientside', ['index', 'search', 'event', 'registration']],
+  ['adminside', ['index', 'event', 'categories']]]) {
+  const base = deploymentPath + (folder === 'adminside' ? '/admin/' : '/');
+  for (const name of names) {
+    const route = (folder === 'adminside' ? '/admin/' : '/') + name + '.html';
+    const html = fs.readFileSync(path.join(__dirname, '..', folder, name + '.html'), 'utf8')
+      .replace(/<base\s+href="[^"]*"\s*\/?\s*>/, '<base href="' + base + '">');
+    app.get(name === 'index' ? [route, folder === 'adminside' ? '/admin/' : '/'] : route,
+      (_request, response) => response.set('Cache-Control', 'no-cache').type('html').send(html));
+  }
+}
+app.get('/admin', (request, response) => {
+  const query = request.url.includes('?') ? request.url.slice(request.url.indexOf('?')) : '';
+  response.redirect(308, deploymentPath + '/admin/' + query);
+});
 app.use('/admin', express.static(path.join(__dirname, '..', 'adminside')));
 app.use(express.static(path.join(__dirname, '..', 'clientside')));
 app.use((_req, res) => res.status(404).send('Page not found. Open the event list or staff website.'));
@@ -216,7 +234,7 @@ app.use((error, req, res, _next) => {
 function start() {
   const port = Number(process.env.PORT || 3027);
   return pool.query('SELECT 1').then(() => {
-    const server = app.listen(port, '0.0.0.0', () => console.log(`Driftline v2: http://localhost:${port}`));
+    const server = app.listen(port, '0.0.0.0', () => console.log(`Driftline ${require('./package.json').version}: http://localhost:${port}`));
     const stop = () => server.close(() => pool.end().then(() => process.exit(0)));
     process.once('SIGTERM', stop);
     process.once('SIGINT', stop);

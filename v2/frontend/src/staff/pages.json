@@ -1,0 +1,17 @@
+[
+  {
+    "page": "categories",
+    "controller": "CategoriesController",
+    "alias": "categories"
+  },
+  {
+    "page": "event",
+    "controller": "EventEditorController",
+    "alias": "editor"
+  },
+  {
+    "page": "index",
+    "controller": "StaffEventsController",
+    "alias": "staff"
+  }
+]

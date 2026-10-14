@@ -1,6 +1,7 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
   <head>
+    <base href="./" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#103f49" />
@@ -10,222 +11,23 @@
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      data-beasties-skip
     />
-    <link rel="stylesheet" href="assets/style.css" />
-    <link rel="stylesheet" href="assets/forms.css" />
-    <script defer src="assets/vendor/angular.min.js"></script>
-    <script defer src="assets/js/config.js"></script>
-    <script defer src="assets/js/shared.js"></script>
-    <script defer src="assets/js/app.js"></script>
+    <link rel="stylesheet" data-beasties-skip href="assets/style.css" />
+    <link rel="stylesheet" data-beasties-skip href="assets/forms.css" />
+
+    <style>
+      app-root,
+      app-page,
+      app-event-card {
+        display: contents;
+      }
+    </style>
   </head>
-  <body ng-app="driftline" ng-cloak data-page="event">
-    <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header" ng-controller="NavigationController as nav">
-      <div class="header-inner content-shell">
-        <a class="brand" href="index.html" aria-label="Driftline home"
-          >driftline<span>.</span></a
-        >
-        <button
-          class="menu-toggle"
-          type="button"
-          aria-controls="site-nav"
-          ng-attr-aria-expanded="{{nav.open}}"
-          ng-click="nav.open = !nav.open"
-        >
-          Menu
-        </button>
-        <nav
-          class="site-nav"
-          ng-class="{open: nav.open}"
-          id="site-nav"
-          aria-label="Main navigation"
-        >
-          <a href="index.html">Home</a
-          ><a href="search.html" aria-current="page">Events</a
-          ><a href="admin/">Staff</a>
-        </nav>
-      </div>
-    </header>
-    <main id="main" ng-controller="EventController as detail">
-      <p class="status-message content-shell" ng-if="detail.loading">
-        Loading event details...
-      </p>
-      <div class="empty-state content-shell" ng-if="detail.error">
-        <h1>Event unavailable</h1>
-        <p>{{detail.error}}</p>
-        <a class="text-link" href="search.html">Browse events</a>
-      </div>
-      <article
-        class="detail-page content-shell"
-        ng-if="detail.event && !detail.loading && !detail.error"
-      >
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <a href="search.html">Events</a><span aria-hidden="true">/</span
-          ><span>{{detail.event.name}}</span>
-        </nav>
-        <div class="detail-hero">
-          <figure class="detail-cover">
-            <img ng-src="{{detail.event.imagePath}}" alt="" />
-          </figure>
-          <header class="detail-header">
-            <span class="category-pill">{{detail.event.category}}</span>
-            <h1>{{detail.event.name}}</h1>
-            <p>{{detail.event.summary}}</p>
-            <div class="detail-hero-meta">
-              <span>{{view.date(detail.event.date)}}</span
-              ><span>{{detail.event.suburb}}</span>
-            </div>
-          </header>
-        </div>
-        <div class="detail-layout">
-          <div class="detail-main">
-            <section class="detail-story" aria-labelledby="about-event">
-              <h2 id="about-event">About this event</h2>
-              <p>{{detail.event.description}}</p>
-              <h3>Purpose</h3>
-              <p>{{detail.event.purpose}}</p>
-              <h3>Meeting point</h3>
-              <p>{{detail.event.meetingPoint}}</p>
-              <h3>Organised by {{detail.event.organization}}</h3>
-              <p>{{detail.event.organizationSummary}}</p>
-            </section>
-            <section class="weather-panel" aria-labelledby="weather-title">
-              <div>
-                <p class="eyebrow">PLAN YOUR MORNING</p>
-                <h3 id="weather-title">Weather at {{detail.event.suburb}}</h3>
-              </div>
-              <p ng-if="detail.weatherLoading">Checking the forecast...</p>
-              <p class="weather-reading" ng-if="detail.weather.description">
-                <strong>{{detail.weather.description}}</strong
-                ><span>{{detail.weather.low}}°–{{detail.weather.high}}°C</span>
-              </p>
-              <p ng-if="detail.weather.message">{{detail.weather.message}}</p>
-              <p class="field-help" ng-if="detail.weather.description">
-                Forecast for {{view.date(detail.event.date)}}. Conditions may
-                change.
-              </p>
-              <a
-                class="weather-credit"
-                href="https://open-meteo.com/"
-                target="_blank"
-                rel="noopener"
-                >Weather data by Open-Meteo</a
-              >
-            </section>
-          </div>
-          <aside class="booking-panel" aria-labelledby="booking-title">
-            <h2 id="booking-title">Event details</h2>
-            <dl class="booking-facts">
-              <div>
-                <dt>Date</dt>
-                <dd>{{view.date(detail.event.date)}}</dd>
-              </div>
-              <div>
-                <dt>Time</dt>
-                <dd>{{detail.event.startTime}}–{{detail.event.endTime}}</dd>
-              </div>
-              <div>
-                <dt>Location</dt>
-                <dd>{{detail.event.locationName}}, {{detail.event.suburb}}</dd>
-              </div>
-              <div>
-                <dt>Entry</dt>
-                <dd>
-                  {{detail.event.ticketPrice === 0 ? 'Free' :
-                  view.money(detail.event.ticketPrice) + ' per person'}}
-                </dd>
-              </div>
-            </dl>
-            <div class="funding">
-              <h3>Fundraising progress</h3>
-              <div class="funding-amounts">
-                <strong
-                  >{{view.money(detail.event.fundingRaised)}} recorded</strong
-                ><span>{{view.money(detail.event.fundingGoal)}} goal</span>
-              </div>
-              <div
-                class="progress-track"
-                role="progressbar"
-                aria-label="Fundraising progress"
-                ng-attr-aria-valuenow="{{view.progress(detail.event)}}"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                <div
-                  class="progress-fill"
-                  ng-style="{width: view.progress(detail.event) + '%'}"
-                ></div>
-              </div>
-              <p class="field-help">
-                Includes donations and booked ticket amounts.
-              </p>
-            </div>
-            <a
-              class="primary-button register-button"
-              ng-href="registration.html?id={{detail.event.id}}"
-              >Book places</a
-            >
-          </aside>
-        </div>
-        <section
-          class="registration-records"
-          aria-labelledby="registrations-title"
-        >
-          <div class="records-heading">
-            <div>
-              <p class="eyebrow">WHO'S JOINING</p>
-              <h2 id="registrations-title">Event registrations</h2>
-            </div>
-            <p>
-              {{detail.event.registrations.length}}
-              {{detail.event.registrations.length === 1 ? 'booking' :
-              'bookings'}} · {{detail.event.ticketsBooked}}
-              {{detail.event.ticketsBooked === 1 ? 'ticket' : 'tickets'}}
-            </p>
-          </div>
-          <p ng-if="!detail.event.registrations.length">
-            No bookings yet. You can be the first to join.
-          </p>
-          <div class="table-scroll" ng-if="detail.event.registrations.length">
-            <table class="records-table">
-              <caption>
-                Newest bookings first. All times are shown in Sydney time.
-                Contact details are kept in the staff view.
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">Registered</th>
-                  <th scope="col">Name</th>
-                  <th scope="col" class="number-cell">Tickets</th>
-                  <th scope="col" class="number-cell">Ticket amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  ng-repeat="record in detail.event.registrations track by record.id"
-                >
-                  <td>{{view.recorded(record.registeredAt)}}</td>
-                  <td>{{record.fullName}}</td>
-                  <td class="number-cell">{{record.tickets}}</td>
-                  <td class="number-cell">
-                    {{view.money(record.totalAmount)}}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </article>
-    </main>
-    <footer class="site-footer">
-      <div class="footer-inner content-shell">
-        <a class="brand" href="index.html">driftline<span>.</span></a
-        ><span>Sydney, NSW</span>
-        <nav aria-label="Footer navigation">
-          <a href="index.html">Home</a><a href="search.html">Events</a
-          ><a href="admin/">Staff</a>
-        </nav>
-      </div>
-    </footer>
-  </body>
+  <body data-page="event">
+    <app-root><p class="status-message" role="status">Loading…</p></app-root
+    ><noscript>Turn on JavaScript to load events and use the forms.</noscript>
+  <script src="polyfills-6ISPNSXF.js" type="module"></script>
+<script src="main-7TN4O55C.js" type="module"></script>
+</body>
 </html>

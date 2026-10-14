@@ -1,6 +1,8 @@
 # Driftline — PROG2002 A3 reference project
 
-Driftline lists community events along Sydney's coast. This version extends A2 with bookings, a staff website and MySQL-backed editing. It uses Node.js, Express, MySQL and AngularJS 1.8.3 on both websites. Event pages show an Open-Meteo forecast when the event falls within the forecast window.
+Current release: **3.0.0**, with **Angular 22.2.2 + TypeScript 6.0.3** on both websites. See [the build and verification runbook](docs/angular22-build-runbook.md) for current source, commands and assessment evidence.
+
+Driftline lists community events along Sydney's coast. This version extends A2 with bookings, a staff website and MySQL-backed editing. It uses Node.js, Express, MySQL and Angular 22.2.2 and TypeScript 6.0.3 on both websites. Event pages show an Open-Meteo forecast when the event falls within the forecast window.
 
 This is a working reference implementation with recorded local checks. Read [AI-use.md](docs/AI-use.md) before using it for assessed work: the supplied brief does not permit copying generated code or a generated report into a submission.
 
@@ -23,7 +25,7 @@ Use Node.js 18.20.8 or later and MySQL 5.7.44 or later. Keep `api`, `clientside`
 4. In `api`, run `npm ci`, then `npm start`.
 5. Open <http://localhost:3027/> for visitors or <http://localhost:3027/admin/> for staff.
 
-On Windows, `scripts/preview.ps1` checks the configuration and starts the app. MySQL must already be running. Open pages through HTTP; opening HTML files directly does not load the API or AngularJS templates.
+On Windows, `scripts/preview.ps1` checks the configuration and starts the app. MySQL must already be running. Open pages through HTTP; opening HTML files directly does not load the API or Angular templates.
 
 The dataset has 10 events, 12 registrations, 4 categories and 2 organisers. Eight events are active and upcoming, one is suspended and one is past. Sample dates are relative to the SQL import date. Names and contact details are fictional.
 
@@ -66,4 +68,4 @@ Extract all three ZIP files into one directory so the API can serve both website
 - [AI-use record](docs/AI-use.md)
 - [Chinese handoff](HANDOFF.md)
 
-The original A2 files remain outside `v2`. Photographs and the coastal identity are reused from A2. AngularJS is bundled with its MIT licence; its source is <https://github.com/angular/angular.js/tree/v1.8.3>. Weather documentation is at <https://open-meteo.com/en/docs>.
+The original A2 files remain outside `v2`. Photographs and the coastal identity are reused from A2. Angular production bundles retain their third-party MIT licences; framework source is <https://github.com/angular/angular>. Weather documentation is at <https://open-meteo.com/en/docs>.

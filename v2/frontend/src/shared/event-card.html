@@ -1,0 +1,19 @@
+<article class="event-card">
+  <a class="event-card-image" aria-label="View {{item.name}}" href="event.html?id={{item.id}}">
+    <img alt="" loading="lazy" src="{{item.imagePath}}" />
+    <span class="event-card-date"
+      ><strong>{{view.day(item.date)}}</strong><span>{{view.month(item.date)}}</span></span
+    >
+  </a>
+  <div class="event-card-body">
+    <span class="category-pill">{{item.category}}</span>
+    <h3><a href="event.html?id={{item.id}}">{{item.name}}</a></h3>
+    <p>{{item.summary}}</p>
+    <div class="event-card-footer">
+      <span
+        >{{item.suburb}} · {{item.startTime}} · {{item.ticketPrice === 0 ? 'Free' :
+        view.money(item.ticketPrice)}}</span
+      ><a aria-label="View details for {{item.name}}" href="event.html?id={{item.id}}">Details</a>
+    </div>
+  </div>
+</article>

@@ -1,6 +1,6 @@
 # Architecture and API reference
 
-The browser loads HTML, styles, photographs and a local copy of AngularJS. Controllers request JSON through the `EventApi` service. Express validates requests and reads or writes MySQL. AngularJS updates the page from the response; event records are not hardcoded into HTML.
+The browser runs separately built public and staff Angular 22.2.2 applications. Standalone TypeScript components, Angular Router, HttpClient services and form directives render the original design. Express validates requests and reads or writes MySQL. Event records come from JSON APIs rather than hardcoded HTML. The reproducible Angular workspace is in `frontend/`; production output is published to `clientside/` and `adminside/`.
 
 ## Database
 
@@ -88,18 +88,18 @@ Error statuses are `400` for invalid input, `404` for missing/unavailable resour
 ## Booking flow
 
 1. `registration.html?id=2` requests `GET /api/events/2` and displays that event.
-2. AngularJS validates the named form. Invalid input shows a page alert and field messages without sending a booking.
-3. The controller posts `fullName`, `email`, `phone` and `tickets`. The server validates them again.
+2. Angular validates the named form. Invalid input shows a page alert and field messages without sending a booking.
+3. The TypeScript component posts `fullName`, `email`, `phone` and `tickets` through HttpClient. The server validates them again.
 4. The API locks the active event, reads its price, calculates the total and inserts the timestamped registration. Client-supplied totals or dates are not trusted.
 5. The response supplies the reference and stored values. The page shows confirmation and links to the event and event list.
 
 Three tickets at `$8.50` create a `$25.50` record. A second booking with the same email for that event returns `409`.
 
-## AngularJS and weather
+## Angular and weather
 
-`assets/js/shared.js` defines the module, `$http` service and display helpers. Controllers have explicit dependency arrays. They use `$q` for asynchronous loading, `ng-model` for forms and `ng-repeat ... track by ...` for records. The API service translates request failures into visible messages. Both website packages include their own copies of shared assets.
+`frontend/src/shared/http-api.ts` defines typed HttpClient requests and errors. Standalone components use dependency injection, promises, `NgForm`, two-way `ngModel` binding and built-in `@if`/`@for` rendering. Both applications use explicit change detection for asynchronous page models. HTTP errors retain server field feedback. The two source packages include the full frontend workspace and lock file; the production packages contain only compiled scripts and public assets.
 
-The editor's form is named `editor.form`. Publishing it on the controller keeps it reachable across the `ng-if` child scope, so field validation and the unsaved-edit check read the same form state. AngularJS assigns named form controllers through its expression parser; see the [1.8.3 form directive source](https://github.com/angular/angular.js/blob/v1.8.3/src/ng/directive/form.js).
+The editor uses an `NgForm` template reference. `ViewChild` follows that form while its conditional view exists, so validation and the unsaved-edit warning read the same current state. Date/time inputs remain Sydney wall-clock strings; registration timestamps are formatted separately as UTC instants.
 
 The weather request uses event coordinates, daily weather code and temperature extremes, a 16-day forecast and Sydney timezone. It chooses the row matching the event date. Dates outside that window show an explanation; failures leave the event and booking link usable. WMO code `3` means overcast—the brief's `2003` entry is a typo.
 
@@ -111,9 +111,9 @@ The weather request uses event coordinates, daily weather code and temperature e
 | `api/event_db.js` | MySQL pool and UTC session setup |
 | `api/validation.js` | IDs, dates, contacts, event fields and categories |
 | `api/server.js` | REST routes, transactions, errors and static websites |
-| `clientside/assets/js/shared.js` | API requests, formatting and navigation |
-| `clientside/assets/js/app.js` | Public page controllers and weather |
-| `adminside/assets/js/admin.js` | Staff list, editor and categories |
+| `frontend/src/shared/` | API contracts, requests, formatting, navigation and weather |
+| `frontend/src/site/` | Public page components, templates and tests |
+| `frontend/src/staff/` | Staff list, editor, categories and tests |
 | `api/test/api.test.js` | Tests against dedicated MySQL data |
 
-Primary references: [AngularJS 1.8.3 source and docs](https://github.com/angular/angular.js/tree/v1.8.3), [mysql2 documentation](https://sidorares.github.io/node-mysql2/docs), [Open-Meteo documentation](https://open-meteo.com/en/docs).
+Primary references: [Angular documentation](https://angular.dev/), [mysql2 documentation](https://sidorares.github.io/node-mysql2/docs), [Open-Meteo documentation](https://open-meteo.com/en/docs).

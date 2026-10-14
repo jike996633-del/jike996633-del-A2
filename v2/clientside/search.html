@@ -1,6 +1,7 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
   <head>
+    <base href="./" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f3f7f6" />
@@ -14,172 +15,23 @@
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      data-beasties-skip
     />
-    <link rel="stylesheet" href="assets/style.css" />
-    <link rel="stylesheet" href="assets/forms.css" />
-    <script defer src="assets/vendor/angular.min.js"></script>
-    <script defer src="assets/js/config.js"></script>
-    <script defer src="assets/js/shared.js"></script>
-    <script defer src="assets/js/app.js"></script>
+    <link rel="stylesheet" data-beasties-skip href="assets/style.css" />
+    <link rel="stylesheet" data-beasties-skip href="assets/forms.css" />
+
+    <style>
+      app-root,
+      app-page,
+      app-event-card {
+        display: contents;
+      }
+    </style>
   </head>
-  <body ng-app="driftline" ng-cloak data-page="search">
-    <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header" ng-controller="NavigationController as nav">
-      <div class="header-inner content-shell">
-        <a class="brand" href="index.html" aria-label="Driftline home"
-          >driftline<span>.</span></a
-        >
-        <button
-          class="menu-toggle"
-          type="button"
-          ng-click="nav.open = !nav.open"
-          aria-controls="site-nav"
-          ng-attr-aria-expanded="{{nav.open}}"
-        >
-          Menu
-        </button>
-        <nav
-          class="site-nav"
-          ng-class="{open: nav.open}"
-          id="site-nav"
-          aria-label="Main navigation"
-        >
-          <a href="index.html">Home</a>
-          <a href="search.html" aria-current="page">Events</a>
-          <a href="admin/">Staff</a>
-        </nav>
-      </div>
-    </header>
-    <main id="main" ng-controller="SearchController as search">
-      <section class="page-heading content-shell">
-        <div class="page-heading-copy">
-          <p class="eyebrow">SYDNEY COAST</p>
-          <h1>Find an event</h1>
-          <p>
-            Choose a date, suburb or activity. You can use more than one filter.
-          </p>
-        </div>
-        <img src="assets/images/shore-texture.jpg" alt="" />
-      </section>
-      <section class="search-layout content-shell" aria-label="Search events">
-        <aside class="filter-panel">
-          <div class="filter-heading">
-            <h2>Filters</h2>
-            <button
-              class="clear-button"
-              id="clear-filters"
-              type="button"
-              ng-click="search.clear(filterForm)"
-            >
-              Clear all
-            </button>
-          </div>
-          <form
-            id="filter-form"
-            name="filterForm"
-            ng-submit="search.search(filterForm)"
-            novalidate
-          >
-            <label for="filter-date">Date</label>
-            <input
-              id="filter-date"
-              name="date"
-              type="date"
-              ng-model="search.filters.date"
-            />
-            <label for="filter-location">Location</label>
-            <input
-              id="filter-location"
-              name="location"
-              type="search"
-              ng-model="search.filters.location"
-              ng-maxlength="80"
-              placeholder="e.g. Bondi"
-              maxlength="80"
-            />
-            <label for="filter-category">Activity</label>
-            <select
-              id="filter-category"
-              name="category"
-              ng-model="search.filters.category"
-            >
-              <option value="">All activities</option>
-              <option
-                ng-repeat="category in search.categories track by category.id"
-                value="{{category.id}}"
-              >
-                {{category.name}}
-              </option>
-            </select>
-            <button
-              class="primary-button filter-submit"
-              type="submit"
-              ng-disabled="search.loading"
-            >
-              Apply filters
-            </button>
-          </form>
-        </aside>
-        <div class="results-panel">
-          <div class="results-heading">
-            <h2>Upcoming events</h2>
-            <span class="results-count" id="results-count" aria-live="polite"
-              >{{search.loading ? 'Loading...' : (search.events.length || 0) +
-              ((search.events.length || 0) === 1 ? ' event' : ' events')}}</span
-            >
-          </div>
-          <p class="status-message" ng-if="search.loading">Loading events...</p>
-          <div
-            class="form-message error-message"
-            role="alert"
-            ng-if="search.error"
-          >
-            {{search.error}}
-          </div>
-          <p
-            class="form-message error-message"
-            role="alert"
-            ng-if="search.categoryError"
-          >
-            Activities could not be loaded: {{search.categoryError}}
-          </p>
-          <div
-            class="empty-state"
-            ng-if="!search.loading && !search.error && !search.events.length"
-          >
-            <h3>No matching events</h3>
-            <p>Try a different date, location or activity.</p>
-            <button
-              type="button"
-              class="clear-button"
-              ng-click="search.clear(filterForm)"
-            >
-              Clear all filters
-            </button>
-          </div>
-          <div
-            id="search-results"
-            class="event-list"
-            aria-live="polite"
-            ng-if="!search.loading && !search.error"
-          >
-            <div
-              ng-repeat="item in search.events track by item.id"
-              ng-include="'assets/templates/event-card.html'"
-            ></div>
-          </div>
-        </div>
-      </section>
-    </main>
-    <footer class="site-footer">
-      <div class="footer-inner content-shell">
-        <a class="brand" href="index.html">driftline<span>.</span></a>
-        <span>Sydney, NSW</span>
-        <nav aria-label="Footer navigation">
-          <a href="index.html">Home</a><a href="search.html">Events</a
-          ><a href="admin/">Staff</a>
-        </nav>
-      </div>
-    </footer>
-  </body>
+  <body data-page="search">
+    <app-root><p class="status-message" role="status">Loading…</p></app-root
+    ><noscript>Turn on JavaScript to load events and use the forms.</noscript>
+  <script src="polyfills-6ISPNSXF.js" type="module"></script>
+<script src="main-7TN4O55C.js" type="module"></script>
+</body>
 </html>

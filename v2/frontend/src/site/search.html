@@ -1,0 +1,115 @@
+<a class="skip-link" localAnchor="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner content-shell">
+    <a class="brand" href="index.html" aria-label="Driftline home">driftline<span>.</span></a>
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-controls="site-nav"
+      (click)="nav.open = !nav.open"
+      [attr.aria-expanded]="nav.open"
+    >
+      Menu
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Main navigation" [ngClass]="{open: nav.open}">
+      <a href="index.html">Home</a>
+      <a href="vm.html" aria-current="page">Events</a>
+      <a href="admin/">Staff</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <section class="page-heading content-shell">
+    <div class="page-heading-copy">
+      <p class="eyebrow">SYDNEY COAST</p>
+      <h1>Find an event</h1>
+      <p>Choose a date, suburb or activity. You can use more than one filter.</p>
+    </div>
+    <img src="assets/images/shore-texture.jpg" alt="" />
+  </section>
+  <section class="search-layout content-shell" aria-label="Search events">
+    <aside class="filter-panel">
+      <div class="filter-heading">
+        <h2>Filters</h2>
+        <button
+          class="clear-button"
+          id="clear-filters"
+          type="button"
+          (click)="vm.clear(filterForm)"
+        >
+          Clear all
+        </button>
+      </div>
+      <form
+        id="filter-form"
+        name="filterForm"
+        novalidate
+        #filterForm="ngForm"
+        (ngSubmit)="vm.search(filterForm)"
+      >
+        <label for="filter-date">Date</label>
+        <input id="filter-date" name="date" type="date" [(ngModel)]="vm.filters.date" />
+        <label for="filter-location">Location</label>
+        <input
+          id="filter-location"
+          name="location"
+          type="search"
+          placeholder="e.g. Bondi"
+          maxlength="80"
+          [(ngModel)]="vm.filters.location"
+        />
+        <label for="filter-category">Activity</label>
+        <select id="filter-category" name="category" [(ngModel)]="vm.filters.category">
+          <option value="">All activities</option>
+          @for (category of (vm.categories); track category.id) {
+          <option value="{{category.id}}">{{category.name}}</option>
+          }
+        </select>
+        <button class="primary-button filter-submit" type="submit" [disabled]="vm.loading">
+          Apply filters
+        </button>
+      </form>
+    </aside>
+    <div class="results-panel">
+      <div class="results-heading">
+        <h2>Upcoming events</h2>
+        <span class="results-count" id="results-count" aria-live="polite"
+          >{{vm.loading ? 'Loading...' : (vm.events.length || 0) + ((vm.events.length || 0) === 1 ?
+          ' event' : ' events')}}</span
+        >
+      </div>
+      @if (vm.loading) {
+      <p class="status-message">Loading events...</p>
+      } @if (vm.error) {
+      <div class="form-message error-message" role="alert">{{vm.error}}</div>
+      } @if (vm.categoryError) {
+      <p class="form-message error-message" role="alert">
+        Activities could not be loaded: {{vm.categoryError}}
+      </p>
+      } @if (!vm.loading && !vm.error && !vm.events.length) {
+      <div class="empty-state">
+        <h3>No matching events</h3>
+        <p>Try a different date, location or activity.</p>
+        <button type="button" class="clear-button" (click)="vm.clear(filterForm)">
+          Clear all filters
+        </button>
+      </div>
+      } @if (!vm.loading && !vm.error) {
+      <div id="search-results" class="event-list" aria-live="polite">
+        @for (item of (vm.events); track item.id) {
+        <div><app-event-card [event]="item" /></div>
+        }
+      </div>
+      }
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner content-shell">
+    <a class="brand" href="index.html">driftline<span>.</span></a>
+    <span>Sydney, NSW</span>
+    <nav aria-label="Footer navigation">
+      <a href="index.html">Home</a><a href="vm.html">Events</a><a href="admin/">Staff</a>
+    </nav>
+  </div>
+</footer>

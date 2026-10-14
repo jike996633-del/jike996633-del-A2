@@ -1,0 +1,22 @@
+[
+  {
+    "page": "event",
+    "controller": "EventController",
+    "alias": "detail"
+  },
+  {
+    "page": "index",
+    "controller": "HomeController",
+    "alias": "home"
+  },
+  {
+    "page": "registration",
+    "controller": "RegistrationController",
+    "alias": "booking"
+  },
+  {
+    "page": "search",
+    "controller": "SearchController",
+    "alias": "search"
+  }
+]

@@ -1,6 +1,7 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
   <head>
+    <base href="./" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Categories | Driftline staff</title>
@@ -9,226 +10,24 @@
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      data-beasties-skip
     />
-    <link rel="stylesheet" href="assets/style.css" />
-    <link rel="stylesheet" href="assets/forms.css" />
-    <link rel="stylesheet" href="assets/admin.css" />
-    <script defer src="assets/vendor/angular.min.js"></script>
-    <script defer src="assets/js/config.js"></script>
-    <script defer src="assets/js/shared.js"></script>
-    <script defer src="assets/js/admin.js"></script>
+    <link rel="stylesheet" data-beasties-skip href="assets/style.css" />
+    <link rel="stylesheet" data-beasties-skip href="assets/forms.css" />
+    <link rel="stylesheet" data-beasties-skip href="assets/admin.css" />
+
+    <style>
+      app-root,
+      app-page,
+      app-event-card {
+        display: contents;
+      }
+    </style>
   </head>
-  <body ng-app="driftline" ng-cloak data-site="admin">
-    <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header" ng-controller="NavigationController as nav">
-      <div class="header-inner content-shell">
-        <a class="brand" href="index.html"
-          >driftline<span>.</span><small>Staff</small></a
-        ><button
-          class="menu-toggle"
-          type="button"
-          aria-controls="site-nav"
-          ng-attr-aria-expanded="{{nav.open}}"
-          ng-click="nav.open = !nav.open"
-        >
-          Menu
-        </button>
-        <nav
-          class="site-nav"
-          ng-class="{open: nav.open}"
-          id="site-nav"
-          aria-label="Staff navigation"
-        >
-          <a href="index.html">Events</a><a href="event.html">New event</a
-          ><a href="categories.html" aria-current="page">Categories</a
-          ><a href="../index.html">Public website ↗</a>
-        </nav>
-      </div>
-    </header>
-    <main
-      id="main"
-      class="staff-main content-shell"
-      ng-controller="CategoriesController as categories"
-    >
-      <div class="staff-heading">
-        <div>
-          <p class="eyebrow">ACTIVITY TYPES</p>
-          <h1>Categories</h1>
-          <p>
-            Keep the names used in event listings and search filters consistent.
-          </p>
-        </div>
-      </div>
-      <div
-        class="form-message success-message"
-        role="status"
-        ng-if="categories.message"
-      >
-        {{categories.message}}
-      </div>
-      <div class="category-layout">
-        <section class="staff-table-wrap">
-          <p class="status-message" ng-if="categories.loading">
-            Loading categories...
-          </p>
-          <div class="table-scroll">
-            <table class="records-table">
-              <caption>
-                Categories used by events cannot be deleted.
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Slug</th>
-                  <th scope="col">Manage</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  ng-repeat="category in categories.categories track by category.id"
-                >
-                  <td>{{category.name}}</td>
-                  <td class="slug-cell">{{category.slug}}</td>
-                  <td>
-                    <div class="row-actions">
-                      <button
-                        class="small-button"
-                        type="button"
-                        ng-click="categories.edit(category)"
-                        aria-label="Edit {{category.name}}"
-                      >
-                        Edit</button
-                      ><button
-                        class="small-button delete-link"
-                        type="button"
-                        ng-click="categories.requestDelete(category)"
-                        aria-label="Delete {{category.name}}"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-        <form
-          class="category-form"
-          name="categoryForm"
-          ng-submit="categories.save(categoryForm)"
-          novalidate
-        >
-          <h2>{{categories.data.id ? 'Edit category' : 'Add a category'}}</h2>
-          <div class="field">
-            <label for="category-name">Name</label
-            ><input
-              id="category-name"
-              name="name"
-              type="text"
-              ng-model="categories.data.name"
-              required
-              ng-minlength="2"
-              maxlength="80"
-            />
-            <p
-              class="field-error"
-              ng-if="(categoryForm.$submitted || categoryForm.name.$touched) && categoryForm.name.$invalid"
-            >
-              Enter a name (2–80 characters).
-            </p>
-            <p class="field-error" ng-if="categories.fields.name">
-              {{categories.fields.name}}
-            </p>
-          </div>
-          <div class="field">
-            <label for="category-slug">Slug</label
-            ><input
-              id="category-slug"
-              name="slug"
-              type="text"
-              ng-model="categories.data.slug"
-              required
-              maxlength="80"
-              ng-pattern="/^[a-z0-9]+(?:-[a-z0-9]+)*$/"
-              aria-describedby="slug-help"
-            />
-            <p class="field-help" id="slug-help">
-              Lowercase words with hyphens, such as beach-cleanup.
-            </p>
-            <p
-              class="field-error"
-              ng-if="(categoryForm.$submitted || categoryForm.slug.$touched) && categoryForm.slug.$invalid"
-            >
-              Use lowercase words separated by hyphens.
-            </p>
-            <p class="field-error" ng-if="categories.fields.slug">
-              {{categories.fields.slug}}
-            </p>
-          </div>
-          <div
-            class="form-message error-message"
-            role="alert"
-            ng-if="categories.error"
-          >
-            {{categories.error}}
-          </div>
-          <div class="category-actions">
-            <button
-              class="primary-button"
-              type="submit"
-              ng-disabled="categories.saving"
-            >
-              {{categories.saving ? 'Saving...' : 'Save category'}}</button
-            ><button
-              class="clear-button"
-              type="button"
-              ng-click="categories.reset(categoryForm)"
-            >
-              Clear form
-            </button>
-          </div>
-        </form>
-      </div>
-      <dialog
-        class="delete-dialog"
-        id="delete-category-dialog"
-        aria-labelledby="delete-category-title"
-      >
-        <h2 id="delete-category-title">Delete this category?</h2>
-        <p>
-          <strong>{{categories.selected.name}}</strong> will be removed if no
-          events use it.
-        </p>
-        <div
-          class="form-message error-message"
-          role="alert"
-          ng-if="categories.deleteError"
-        >
-          {{categories.deleteError}}
-        </div>
-        <div class="dialog-actions">
-          <button
-            class="small-button"
-            type="button"
-            ng-click="categories.cancelDelete()"
-            ng-disabled="categories.deleting"
-          >
-            Keep category</button
-          ><button
-            class="primary-button danger-button"
-            type="button"
-            ng-click="categories.remove()"
-            ng-disabled="categories.deleting"
-          >
-            {{categories.deleting ? 'Deleting...' : 'Delete category'}}
-          </button>
-        </div>
-      </dialog>
-    </main>
-    <footer class="staff-footer content-shell">
-      <span>Driftline · Sydney, NSW</span
-      ><a href="../index.html">Open public website</a>
-    </footer>
-  </body>
+  <body data-site="admin">
+    <app-root><p class="status-message" role="status">Loading…</p></app-root
+    ><noscript>Turn on JavaScript to load events and use the forms.</noscript>
+  <script src="polyfills-6ISPNSXF.js" type="module"></script>
+<script src="main-OR5LUR2Q.js" type="module"></script>
+</body>
 </html>

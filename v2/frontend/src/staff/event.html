@@ -1,0 +1,461 @@
+<a class="skip-link" localAnchor="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner content-shell">
+    <a class="brand" href="index.html">driftline<span>.</span><small>Staff</small></a
+    ><button
+      class="menu-toggle"
+      type="button"
+      aria-controls="site-nav"
+      (click)="nav.open = !nav.open"
+      [attr.aria-expanded]="nav.open"
+    >
+      Menu
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Staff navigation" [ngClass]="{open: nav.open}">
+      <a href="index.html">Events</a><a href="event.html" aria-current="page">New event</a
+      ><a href="categories.html">Categories</a><a href="../index.html">Public website ↗</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="staff-main content-shell">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="index.html">Events</a><span aria-hidden="true">/</span
+    ><span>{{vm.id ? 'Edit event' : 'New event'}}</span>
+  </nav>
+  <div class="staff-heading">
+    <div>
+      <p class="eyebrow">EVENT DETAILS</p>
+      <h1>{{vm.id ? 'Edit event' : 'Add an event'}}</h1>
+      <p>{{vm.event ? vm.event.name : 'Set the date, meeting point and booking details.'}}</p>
+    </div>
+    @if (vm.event?.displayStatus === 'active') {
+    <a class="small-button" target="_blank" rel="noopener" href="../event.html?id={{vm.id}}"
+      >View public event ↗</a
+    >
+    }
+  </div>
+  @if (vm.loading) {
+  <p class="status-message">Loading event details...</p>
+  } @if (vm.loadError) {
+  <div class="empty-state">
+    <h2>Event could not be loaded</h2>
+    <p>{{vm.loadError}}</p>
+    <a class="text-link" href="index.html">Back to events</a>
+  </div>
+  } @if (!vm.loading && !vm.loadError) {
+  <div class="editor-layout">
+    <form
+      class="event-editor"
+      name="eventFormControl"
+      novalidate
+      #eventFormControl="ngForm"
+      (ngSubmit)="vm.save(eventFormControl)"
+    >
+      <fieldset>
+        <legend>What volunteers will do</legend>
+        <div class="field">
+          <label for="name">Event name</label
+          ><input
+            type="text"
+            id="name"
+            name="name"
+            required
+            maxlength="160"
+            aria-describedby="name-error"
+            [(ngModel)]="vm.data.name"
+          />
+          @if ((eventFormControl.submitted || eventFormControl.controls['name']?.touched) &&
+          eventFormControl.controls['name']?.invalid) {
+          <p class="field-error" id="name-error">Check event name.</p>
+          } @if (vm.fields.name) {
+          <p class="field-error">{{vm.fields.name}}</p>
+          }
+        </div>
+        <div class="field">
+          <label for="summary">Short description</label
+          ><textarea
+            id="summary"
+            name="summary"
+            required
+            maxlength="300"
+            aria-describedby="summary-error"
+            [(ngModel)]="vm.data.summary"
+          ></textarea>
+          @if ((eventFormControl.submitted || eventFormControl.controls['summary']?.touched) &&
+          eventFormControl.controls['summary']?.invalid) {
+          <p class="field-error" id="summary-error">Check short description.</p>
+          } @if (vm.fields.summary) {
+          <p class="field-error">{{vm.fields.summary}}</p>
+          }
+        </div>
+        <div class="field">
+          <label for="description">About the event</label
+          ><textarea
+            id="description"
+            name="description"
+            required
+            maxlength="5000"
+            aria-describedby="description-error"
+            [(ngModel)]="vm.data.description"
+          ></textarea>
+          @if ((eventFormControl.submitted || eventFormControl.controls['description']?.touched) &&
+          eventFormControl.controls['description']?.invalid) {
+          <p class="field-error" id="description-error">Check about the event.</p>
+          } @if (vm.fields.description) {
+          <p class="field-error">{{vm.fields.description}}</p>
+          }
+        </div>
+        <div class="field">
+          <label for="purpose">Purpose</label
+          ><textarea
+            id="purpose"
+            name="purpose"
+            required
+            maxlength="300"
+            aria-describedby="purpose-error"
+            [(ngModel)]="vm.data.purpose"
+          ></textarea>
+          @if ((eventFormControl.submitted || eventFormControl.controls['purpose']?.touched) &&
+          eventFormControl.controls['purpose']?.invalid) {
+          <p class="field-error" id="purpose-error">Check purpose.</p>
+          } @if (vm.fields.purpose) {
+          <p class="field-error">{{vm.fields.purpose}}</p>
+          }
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>When and where</legend>
+        <div class="field-grid three-fields">
+          <div class="field">
+            <label for="date">Event date</label
+            ><input
+              type="date"
+              id="date"
+              name="date"
+              required
+              aria-describedby="date-error"
+              [(ngModel)]="vm.data.dateInput"
+            />
+            @if ((eventFormControl.submitted || eventFormControl.controls['date']?.touched) &&
+            eventFormControl.controls['date']?.invalid) {
+            <p class="field-error" id="date-error">Check event date.</p>
+            } @if (vm.fields.date) {
+            <p class="field-error">{{vm.fields.date}}</p>
+            }
+          </div>
+          <div class="field">
+            <label for="startTime">Start time</label
+            ><input
+              type="time"
+              id="startTime"
+              name="startTime"
+              required
+              aria-describedby="startTime-error"
+              [(ngModel)]="vm.data.startInput"
+            />
+            @if ((eventFormControl.submitted || eventFormControl.controls['startTime']?.touched) &&
+            eventFormControl.controls['startTime']?.invalid) {
+            <p class="field-error" id="startTime-error">Check start time.</p>
+            } @if (vm.fields.startTime) {
+            <p class="field-error">{{vm.fields.startTime}}</p>
+            }
+          </div>
+          <div class="field">
+            <label for="endTime">End time</label
+            ><input
+              type="time"
+              id="endTime"
+              name="endTime"
+              required
+              aria-describedby="endTime-error"
+              [(ngModel)]="vm.data.endInput"
+            />
+            @if ((eventFormControl.submitted || eventFormControl.controls['endTime']?.touched) &&
+            eventFormControl.controls['endTime']?.invalid) {
+            <p class="field-error" id="endTime-error">Check end time.</p>
+            } @if (vm.fields.endTime) {
+            <p class="field-error">{{vm.fields.endTime}}</p>
+            }
+          </div>
+        </div>
+        <div class="field">
+          <label for="locationName">Location name</label
+          ><input
+            type="text"
+            id="locationName"
+            name="locationName"
+            required
+            maxlength="120"
+            aria-describedby="locationName-error"
+            [(ngModel)]="vm.data.locationName"
+          />
+          @if ((eventFormControl.submitted || eventFormControl.controls['locationName']?.touched) &&
+          eventFormControl.controls['locationName']?.invalid) {
+          <p class="field-error" id="locationName-error">Check location name.</p>
+          } @if (vm.fields.locationName) {
+          <p class="field-error">{{vm.fields.locationName}}</p>
+          }
+        </div>
+        <div class="field">
+          <label for="suburb">Suburb</label
+          ><input
+            type="text"
+            id="suburb"
+            name="suburb"
+            required
+            maxlength="80"
+            aria-describedby="suburb-error"
+            [(ngModel)]="vm.data.suburb"
+          />
+          @if ((eventFormControl.submitted || eventFormControl.controls['suburb']?.touched) &&
+          eventFormControl.controls['suburb']?.invalid) {
+          <p class="field-error" id="suburb-error">Check suburb.</p>
+          } @if (vm.fields.suburb) {
+          <p class="field-error">{{vm.fields.suburb}}</p>
+          }
+        </div>
+        <div class="field">
+          <label for="meetingPoint">Meeting point</label
+          ><input
+            type="text"
+            id="meetingPoint"
+            name="meetingPoint"
+            required
+            maxlength="250"
+            aria-describedby="meetingPoint-error"
+            [(ngModel)]="vm.data.meetingPoint"
+          />
+          @if ((eventFormControl.submitted || eventFormControl.controls['meetingPoint']?.touched) &&
+          eventFormControl.controls['meetingPoint']?.invalid) {
+          <p class="field-error" id="meetingPoint-error">Check meeting point.</p>
+          } @if (vm.fields.meetingPoint) {
+          <p class="field-error">{{vm.fields.meetingPoint}}</p>
+          }
+        </div>
+        <p class="coordinate-help">
+          Coordinates let visitors check the weather at this location. Use decimal degrees; Sydney
+          latitudes are negative.
+        </p>
+        <div class="field-grid">
+          <div class="field">
+            <label for="latitude">Latitude</label
+            ><input
+              type="number"
+              id="latitude"
+              name="latitude"
+              required
+              min="-90"
+              max="90"
+              step="any"
+              aria-describedby="latitude-error"
+              [(ngModel)]="vm.data.latitude"
+            />
+            @if ((eventFormControl.submitted || eventFormControl.controls['latitude']?.touched) &&
+            eventFormControl.controls['latitude']?.invalid) {
+            <p class="field-error" id="latitude-error">Check latitude.</p>
+            } @if (vm.fields.latitude) {
+            <p class="field-error">{{vm.fields.latitude}}</p>
+            }
+          </div>
+          <div class="field">
+            <label for="longitude">Longitude</label
+            ><input
+              type="number"
+              id="longitude"
+              name="longitude"
+              required
+              min="-180"
+              max="180"
+              step="any"
+              aria-describedby="longitude-error"
+              [(ngModel)]="vm.data.longitude"
+            />
+            @if ((eventFormControl.submitted || eventFormControl.controls['longitude']?.touched) &&
+            eventFormControl.controls['longitude']?.invalid) {
+            <p class="field-error" id="longitude-error">Check longitude.</p>
+            } @if (vm.fields.longitude) {
+            <p class="field-error">{{vm.fields.longitude}}</p>
+            }
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Tickets and fundraising</legend>
+        <div class="field-grid">
+          <div class="field">
+            <label for="ticketPrice">Ticket price (AUD)</label
+            ><input
+              type="number"
+              id="ticketPrice"
+              name="ticketPrice"
+              required
+              min="0"
+              max="999999.99"
+              step="0.01"
+              aria-describedby="ticketPrice-error"
+              [(ngModel)]="vm.data.ticketPrice"
+            />
+            @if ((eventFormControl.submitted || eventFormControl.controls['ticketPrice']?.touched)
+            && eventFormControl.controls['ticketPrice']?.invalid) {
+            <p class="field-error" id="ticketPrice-error">Check ticket price (aud).</p>
+            } @if (vm.fields.ticketPrice) {
+            <p class="field-error">{{vm.fields.ticketPrice}}</p>
+            }
+          </div>
+          <div class="field">
+            <label for="fundingGoal">Fundraising goal (AUD)</label
+            ><input
+              type="number"
+              id="fundingGoal"
+              name="fundingGoal"
+              required
+              min="0.01"
+              max="99999999.99"
+              step="0.01"
+              aria-describedby="fundingGoal-error"
+              [(ngModel)]="vm.data.fundingGoal"
+            />
+            @if ((eventFormControl.submitted || eventFormControl.controls['fundingGoal']?.touched)
+            && eventFormControl.controls['fundingGoal']?.invalid) {
+            <p class="field-error" id="fundingGoal-error">Check fundraising goal (aud).</p>
+            } @if (vm.fields.fundingGoal) {
+            <p class="field-error">{{vm.fields.fundingGoal}}</p>
+            }
+          </div>
+          <div class="field">
+            <label for="donationRaised">Donations received (AUD)</label
+            ><input
+              type="number"
+              id="donationRaised"
+              name="donationRaised"
+              required
+              min="0"
+              max="99999999.99"
+              step="0.01"
+              aria-describedby="donationRaised-error"
+              [(ngModel)]="vm.data.donationRaised"
+            />
+            <p class="field-help">
+              Booked ticket amounts are added automatically. Enter donations only here.
+            </p>
+            @if ((eventFormControl.submitted ||
+            eventFormControl.controls['donationRaised']?.touched) &&
+            eventFormControl.controls['donationRaised']?.invalid) {
+            <p class="field-error" id="donationRaised-error">Check donations received (aud).</p>
+            } @if (vm.fields.donationRaised) {
+            <p class="field-error">{{vm.fields.donationRaised}}</p>
+            }
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Public listing</legend>
+        <div class="field">
+          <label for="categoryId">Activity category</label
+          ><select id="categoryId" name="categoryId" required [(ngModel)]="vm.data.categoryId">
+            <option value="">Choose a category</option>
+            @for (category of vm.categories; track $index) {
+            <option [ngValue]="category.id">{{category.name}}</option>
+            }
+          </select>
+          @if (eventFormControl.submitted && eventFormControl.controls['categoryId']?.invalid) {
+          <p class="field-error">Choose a category.</p>
+          }
+        </div>
+        <div class="field">
+          <label for="organizationId">Organiser</label
+          ><select
+            id="organizationId"
+            name="organizationId"
+            required
+            [(ngModel)]="vm.data.organizationId"
+          >
+            <option value="">Choose an organiser</option>
+            @for (organiser of vm.organizations; track $index) {
+            <option [ngValue]="organiser.id">{{organiser.name}}</option>
+            }
+          </select>
+          @if (eventFormControl.submitted && eventFormControl.controls['organizationId']?.invalid) {
+          <p class="field-error">Choose an organiser.</p>
+          }
+        </div>
+        <div class="field">
+          <label for="status">Listing status</label
+          ><select id="status" name="status" required [(ngModel)]="vm.data.status">
+            <option value="active">Active</option>
+            <option value="past">Past</option>
+            <option value="suspended">Suspended</option>
+          </select>
+          <p class="field-help">
+            Only Active events dated today or later appear on the public website.
+          </p>
+        </div>
+        <div class="field">
+          <label for="imagePath">Event photograph</label
+          ><select id="imagePath" name="imagePath" required [(ngModel)]="vm.data.imagePath">
+            @for (image of vm.images; track $index) {
+            <option [ngValue]="image.path">{{image.name}}</option>
+            }</select
+          ><img
+            class="editor-image"
+            alt="Preview of the selected event photograph"
+            src="{{vm.data.imagePath}}"
+          />
+        </div>
+      </fieldset>
+      @if (vm.error) {
+      <div class="form-message error-message" role="alert">{{vm.error}}</div>
+      } @if (vm.message) {
+      <div class="form-message success-message" id="save-message" role="status" tabindex="-1">
+        {{vm.message}}
+      </div>
+      }
+      <div class="editor-actions">
+        <button class="primary-button" type="submit" [disabled]="vm.saving">
+          {{vm.saving ? 'Saving...' : 'Save event'}}</button
+        ><a class="text-link" href="index.html">Back to events</a>@if (vm.form?.dirty) {
+        <span>Unsaved changes</span> }
+      </div>
+    </form>
+    <aside class="staff-bookings-panel">
+      <p class="eyebrow">REGISTRATIONS</p>
+      <h2>Who's booked</h2>
+      @if (!vm.event) {
+      <p>Bookings will appear here after the event is created.</p>
+      } @if (vm.event) {
+      <div>
+        <p class="booking-count">
+          {{vm.event.registrationCount}} bookings · {{vm.event.ticketsBooked}} tickets
+        </p>
+        @if (!vm.event.registrations.length) {
+        <p>No bookings for this event yet.</p>
+        }
+        <ol class="staff-bookings">
+          @for (record of (vm.event.registrations); track record.id) {
+          <li>
+            <div class="booking-person">
+              <strong>{{record.fullName}}</strong
+              ><span>{{record.tickets}} {{record.tickets === 1 ? 'ticket' : 'tickets'}}</span>
+            </div>
+            <a href="mailto:{{record.email}}">{{record.email}}</a>
+            <p>{{record.phone}}</p>
+            <div class="booking-record">
+              <span>{{view.recorded(record.registeredAt)}} (Sydney)</span
+              ><span>{{view.money(record.totalAmount)}}</span>
+            </div>
+          </li>
+          }
+        </ol>
+        <p class="field-help">
+          Newest first. Events with bookings must be kept; suspend the listing to close
+          registration.
+        </p>
+      </div>
+      }
+    </aside>
+  </div>
+  }
+</main>
+<footer class="staff-footer content-shell">
+  <span>Driftline · Sydney, NSW</span><a href="../index.html">Open public website</a>
+</footer>
