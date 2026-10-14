@@ -13,7 +13,7 @@ This completed table records implementation and submission readiness. Marks are 
 | Public website | 30% | Angular public pages load database records through typed HttpClient services. The selected-event registration form validates names, contact details and ticket quantities, submits a booking and shows its confirmation. Search, event records, weather states and mobile navigation are implemented. | Account deployments recorded for both kji10 and syang35; complete TypeScript source and compiled assets included. |
 | Staff website | 30% | Angular staff pages list active, past and suspended events, create and edit events, display registrations and contact details, manage categories and show protected-deletion errors. The design uses a horizontal navigation bar and an event table. | Account staff deployments recorded; complete staff TypeScript source and compiled assets included. |
 | Concepts, comments, GitHub and video | 10% | Source and architecture documentation explain the API flow, schema relations, UTC display, price snapshots and competing writes. Genuine local version history is present. | Team GitHub URL, marker access and the personal demonstration video link still need to be supplied. The video limit is 15 minutes. |
-| Teamwork | 15% | The original peer evaluation template has six criteria and two member columns. Each member must describe their own contribution and team experience. | Actual names, allocation, ratings and feedback are required to finish each member's form. |
+| Teamwork | 15% | The original peer evaluation template has six criteria and two member columns. A project-specific feedback draft is supplied as a separate Word file. | Names, workload allocation, ratings and totals are intentionally blank for each member to complete. |
 
 ## Detailed requirement checks
 
@@ -33,7 +33,7 @@ This completed table records implementation and submission readiness. Marks are 
 | Complete SQL and project documentation | Complete | SQL, README and API/architecture documentation |
 | Private GitHub and progress evidence | Link/access verification pending | Supply the team repository URL with A3 code and marker access |
 | Personal demonstration video | Pending link | SCU OneDrive shareable link; maximum 15 minutes |
-| Confidential peer evaluation | Member information pending | Each completed form is sent privately to the tutor |
+| Confidential peer evaluation | Separate Word draft supplied | Personal fields remain blank; each member checks the feedback and sends their own form privately to the tutor |
 
 The source packages contain 12 sample registrations. The separate deployment records contain 13 registrations for each hosted account; the extra hosted row does not change the supplied sample SQL.
 
